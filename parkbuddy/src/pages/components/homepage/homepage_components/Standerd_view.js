@@ -29,8 +29,8 @@ export const Standard_view = () => {
 
     return (
         <div className="flex justify-center">
-            <div className="bg-gray-200 mx-10 my-5 flex justify-center">
-                <div className="grid grid-cols-8 gap-10 px-5 py-10 bg-slate-400 ">
+            <div className="bg-gray-300 mx-10 my-5 flex justify-center">
+                <div className="grid grid-cols-8 gap-10 px-5 py-10">
                     {divElements}
 
                 </div>

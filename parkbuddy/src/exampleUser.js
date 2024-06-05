@@ -11,6 +11,12 @@ export const User = {
             "History": [
                 {
                     "customer_id": "test@gmail.com",
+                    "time":"2024-12-3 12.30 p.m",
+                    
+                },
+                {
+                    "customer_id": "test@gmail.com",
+                    "time":"2024-12-3 12.30 p.m",
                     
                 }
             ]
