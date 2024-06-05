@@ -7,16 +7,18 @@ export const User = {
             "name": "Lot_1",
             "current": "free",
             "start": 'null',
-            "Total_history": 1,
+            "Total_history": 2,
             "History": [
                 {
                     "customer_id": "test@gmail.com",
-                    "time":"2024-12-3 12.30 p.m",
+                    "start_time":"2024-06-06T07:30",
+                    "end_time":"2024-06-06T10:30"
                     
                 },
                 {
-                    "customer_id": "test@gmail.com",
-                    "time":"2024-12-3 12.30 p.m",
+                    "customer_id": "test2@gmail.com",
+                    "start_time":"2024-06-04T07:30",
+                    "end_time":"2024-06-06T10:30"
                     
                 }
             ]
@@ -29,7 +31,8 @@ export const User = {
         "Lot3": {
             "name": "Lot_3",
             "current": "occupied",
-            "start": "5.00 24/5/2024"
+            "start": "5.00 24/5/2024",
+
         },
         "Lot4": {
             "name": "Lot_4",
