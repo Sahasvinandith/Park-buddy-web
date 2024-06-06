@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
-import { User } from "../../../../exampleUser"
-import { useNavigate } from "react-router-dom";
+import {useState } from "react"
+import { User } from "../../../../exampleUser";
 import Park_slot_info from "./Parkview/Park_slot_clicked";
 
 
 export const Standard_view = () => {
+    let Cur_User=User;
 
     let free_lots = 0;
     let Occ_lots = 0;
@@ -15,14 +15,40 @@ export const Standard_view = () => {
     const divElements = [];
 
     const [Park_view, changeView] = useState(true);
-
-    for (const key in User.UserLots) {
-        if (Object.hasOwnProperty.call(User.UserLots, key)) {
-            const element = User.UserLots[key];
+    
+    
+    let i=0;
+    for (const key in Cur_User.UserLots) {
+        let park_lot_status='f'
+        if (Object.hasOwnProperty.call(Cur_User.UserLots, key)) {
+            const element = Cur_User.UserLots[key];
             Total_lots += 1;
-            if (element.current == "free") {//deciding if parking slot is free or occupied
+            for(let cur_event in element.lot_events){
+                if(Object.hasOwnProperty.call(element.lot_events, cur_event)){
+                    const now_event=element.lot_events[cur_event];
+                    let start=now_event.start;
+                    let end=now_event.end;
+                    const startTime = new Date(start);
+                    const endTime = new Date(end);
+                    const currentTime=new Date();
+
+                    if(currentTime >= startTime && currentTime <= endTime){
+                        park_lot_status='o'
+                        break;
+                    }
+
+
+
+                }
+            }
+            
+
+
+
+
+            if (park_lot_status=='f') {//deciding if parking slot is free or occupied
                 free_lots += 1;
-                divElements.push(<div slotname={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-green-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-green-300 hover:shadow-xl hover:bg-green-400 hover:border-green-100 hover:text-yellow-100" onClick={(e) => {
+                divElements.push(<div slotname={element.name} key={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-green-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-green-300 hover:shadow-xl hover:bg-green-400 hover:border-green-100 hover:text-yellow-100" onClick={(e) => {
                     changeView(!Park_view);
                     cur_parklot = e.currentTarget.getAttribute("slotname");
                     set_name(cur_parklot);
@@ -33,7 +59,7 @@ export const Standard_view = () => {
 
             } else {
                 Occ_lots += 1;
-                divElements.push(<div slotname={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-orange-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-red-300 hover:shadow-xl hover:bg-orange-400 hover:border-orange-100 hover:text-yellow-100" onClick={(e) => {
+                divElements.push(<div key={element.name} slotname={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-orange-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-red-300 hover:shadow-xl hover:bg-orange-400 hover:border-orange-100 hover:text-yellow-100" onClick={(e) => {
                     changeView(!Park_view)
                     cur_parklot = e.currentTarget.getAttribute("slotname");
                     set_name(cur_parklot);
