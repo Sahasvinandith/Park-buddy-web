@@ -3,22 +3,33 @@ export const User = {
     "Car_park_name": "Vollystart",
     "num_of_lots": 5,
     "UserLots": {
-        "Lot1": {
+        "Lot_1": {
             "name": "Lot_1",
             "current": "free",
             "start": 'null',
             "Total_history": 2,
-            "History": [
+            "lot_events": [
                 {
-                    "customer_id": "test@gmail.com",
-                    "start_time":"2024-06-06T07:30",
-                    "end_time":"2024-06-06T10:30"
+                    title: 'Client 1',
+                    start: '2024-06-06T07:30',
+                    end:'2024-06-06T10:30',
+                    url: 'https://google.com/',
+                    
                     
                 },
                 {
-                    "customer_id": "test2@gmail.com",
-                    "start_time":"2024-06-04T07:30",
-                    "end_time":"2024-06-06T10:30"
+                    title: 'Client 3',
+                    start: '2024-06-06T11:30',
+                    end:'2024-06-06T15:30',
+                    url: 'https://google.com/',
+                    
+                    
+                },
+                {
+                    title: 'Client 2',
+                    start: '2024-06-08T07:30',
+                    end:'2024-06-08T10:30',
+                    url: 'https://google.com/',
                     
                 }
             ]

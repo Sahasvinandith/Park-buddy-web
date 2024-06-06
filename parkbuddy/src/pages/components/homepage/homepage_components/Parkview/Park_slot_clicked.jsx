@@ -14,26 +14,19 @@ import { type } from '@testing-library/user-event/dist/type';
 
 function Park_slot_info(props){
     const {park_lot_id,changemode}=props;
-    const[events,setevents]=useState([]);
-    // let park_lot_id="Lot1";
-    // setevents(User.UserLots.park_lot_id)
+    console.log(park_lot_id);
+    var events=User.UserLots[park_lot_id].lot_events;
+
+    
     
     return(
-        <div>
+        <div className=' w-screen h-3/4'>
             <button onClick={()=>{
                 changemode();
             }}>go back</button>
             <FullCalendar
                 plugins={[dayGridPlugin,timeGridPlugin,interactionPlugin]}
-                events= {[
-                    {
-                      title: 'My Event',
-                      start: '2024-06-06T07:30',
-                      end:'2024-06-06T10:30',
-                      url: 'https://google.com/'
-                    }
-                    // other events here
-                  ]}
+                events= {events}
                 initialView={'timeGridWeek'}
                 headerToolbar={{
                     start:"today prev,next",

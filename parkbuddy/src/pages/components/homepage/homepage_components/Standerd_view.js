@@ -3,16 +3,15 @@ import { User } from "../../../../exampleUser"
 import { useNavigate } from "react-router-dom";
 import Park_slot_info from "./Parkview/Park_slot_clicked";
 
-let free_lots = 0;
-let Occ_lots = 0;
-let Total_lots = 0;
-let cur_parklot = '';
+
 export const Standard_view = () => {
 
-    // const [free_lots,set_free_lots]=useState(0);
-    // const [Occ_lots,set_occ_lots]=useState(0);
-    // const [Total_lots,set_total_lots]=useState(0);
-    // const [prebooks,set_prebooks]=useState(0);
+    let free_lots = 0;
+    let Occ_lots = 0;
+    let Total_lots = 0;
+    let cur_parklot = 'sdss';
+    const [park_lot_name,set_name]=useState("null");
+
     const divElements = [];
 
     const [Park_view, changeView] = useState(true);
@@ -21,11 +20,12 @@ export const Standard_view = () => {
         if (Object.hasOwnProperty.call(User.UserLots, key)) {
             const element = User.UserLots[key];
             Total_lots += 1;
-            if (element.current == "free") {
+            if (element.current == "free") {//deciding if parking slot is free or occupied
                 free_lots += 1;
                 divElements.push(<div slotname={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-green-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-green-300 hover:shadow-xl hover:bg-green-400 hover:border-green-100 hover:text-yellow-100" onClick={(e) => {
                     changeView(!Park_view);
                     cur_parklot = e.currentTarget.getAttribute("slotname");
+                    set_name(cur_parklot);
 
 
 
@@ -36,6 +36,7 @@ export const Standard_view = () => {
                 divElements.push(<div slotname={element.name} className=" rounded-lg h-5 w-5 ml-1 mr-0 flex justify-center font-semibold  cursor-pointer items-center  bg-orange-200 flex-1 text-center px-10 py-8 shadow-md border-r-2 border-2 border-red-300 hover:shadow-xl hover:bg-orange-400 hover:border-orange-100 hover:text-yellow-100" onClick={(e) => {
                     changeView(!Park_view)
                     cur_parklot = e.currentTarget.getAttribute("slotname");
+                    set_name(cur_parklot);
 
                 }} >{element.name}<br />Occupied</div>);
 
@@ -77,7 +78,7 @@ export const Standard_view = () => {
 
                 </div>
 
-            </div> : <Park_slot_info park_lot_id={cur_parklot} changemode={()=>{changeView(!Park_view)}}/>}
+            </div> : <Park_slot_info park_lot_id={park_lot_name} changemode={()=>{changeView(!Park_view)}}/>}
 
         </div>
     )
