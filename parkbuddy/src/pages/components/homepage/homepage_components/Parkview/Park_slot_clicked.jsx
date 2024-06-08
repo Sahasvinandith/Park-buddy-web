@@ -5,18 +5,55 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { User } from '../../../../../exampleUser';
 import { SquareArrowLeft } from 'lucide-react';
 import Popup_event from './Event_clicked';
+import Create_event from './Date_clicked';
+import { Compare_dates } from './Parkview_utils/Calender_clicked_funcs';
 import React, { useState } from 'react';
+import { CirclePlus } from 'lucide-react';
+import Add_car_popup from './AddCar';
+import { db } from '../../../../../API/firestore';
+import { getDocs, collection,doc } from "firebase/firestore";
+import { useEffect } from 'react';
+
+
+
 
 
 let current_event={};
-function Park_slot_info(props) {
-    const { park_lot_id, changemode } = props;
-    const [Popup_info,set_pop_up_info]=useState({"hi":"hui"})
+var Cur_User=User;
 
-    let Cur_User=User;
-    var events = Cur_User.UserLots[park_lot_id].lot_events;
+function Park_slot_info(props) {
+
+    
+    
+    const { park_lot_id, changemode } = props;
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                const mainDocRef = doc(db, 'Car_Parks','User1@gmail.com');
+                const querySnapshot = await getDocs(collection(mainDocRef,'UserLots'));
+                const dataArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Infor: ",dataArray[1].id);
+                
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            }
+        };
+
+        fetchData();
+
+
+    }, [])
+
+    const [Popup_info,set_pop_up_info]=useState({"hi":"hui"})
+    const [events,setevents]=useState(Cur_User.UserLots[park_lot_id].lot_events);
+
+    
+    // var events = Cur_User.UserLots[park_lot_id].lot_events;
 
     const[event_popup_show,change_event_popup]=useState(false);
+    const[Add_car_popup_show,change_addcar_popup_event]=useState(false);
     
 
     return (
@@ -26,11 +63,12 @@ function Park_slot_info(props) {
 
             <div className=' w-full  h-[calc(100vh-100px)] flex flex-col px-2 justify-between'>
                 <div className='flex flex-row w-full justify-between'>
-                    <div className='flex-1'>
+                    <div className='flex-1 flex flex-row gap-5'>
                         <button className=' bg-slate-600 text-yellow-200 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-lg gap-2 items-center hover:bg-slate-700 ' onClick={() => { changemode(); }} >
                             <SquareArrowLeft size={'30px'} />
                             Go back
                         </button>
+                        <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={()=>{change_addcar_popup_event(true)}} >Add Park <CirclePlus size={"30px"} /></button>
                     </div>
                     
                     <div className='ml-20 text-2xl font-serif font-bold w-96 text-center flex-1'>{park_lot_id}</div>
@@ -64,21 +102,19 @@ function Park_slot_info(props) {
                         
                         set_pop_up_info(current_event);
                         
-                        // alert('Event: ' + info.event.title);
-                        // alert('Start time: ' + info.event.start.getHours());
-                    
-                        // // change the border color just for fun
-                        // info.el.style.borderColor = 'red';
                     }}
                     
                     dateClick={function (info) {
-                        console.log("You pressed on ", info.date.toISOString());
+                        Compare_dates(info.date);
+
+
                     }}
                     selectable={true}
                     height={"90vh"}
                 />
             </div>
             {event_popup_show?<Popup_event Close={()=>change_event_popup(false)} Info={Popup_info}/>:""}
+            {Add_car_popup_show?<Add_car_popup Close={()=>change_addcar_popup_event(false)} Info={Popup_info}/>:""}
             
         </div>
     )
