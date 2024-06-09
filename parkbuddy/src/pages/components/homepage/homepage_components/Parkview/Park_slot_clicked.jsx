@@ -10,9 +10,6 @@ import { Compare_dates } from './Parkview_utils/Calender_clicked_funcs';
 import React, { useState } from 'react';
 import { CirclePlus } from 'lucide-react';
 import Add_car_popup from './AddCar';
-import { db } from '../../../../../API/firestore';
-import { getDocs, collection,doc } from "firebase/firestore";
-import { useEffect } from 'react';
 
 
 
@@ -27,24 +24,7 @@ function Park_slot_info(props) {
     
     const { park_lot_id, changemode } = props;
 
-    useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                const mainDocRef = doc(db, 'Car_Parks','User1@gmail.com');
-                const querySnapshot = await getDocs(collection(mainDocRef,'UserLots'));
-                const dataArray = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log("Infor: ",dataArray[1].id);
-                
-            } catch (error) {
-                console.error("Error fetching data: ", error);
-            }
-        };
-
-        fetchData();
-
-
-    }, [])
+    
 
     const [Popup_info,set_pop_up_info]=useState({"hi":"hui"})
     const [events,setevents]=useState(Cur_User.UserLots[park_lot_id].lot_events);
@@ -75,7 +55,7 @@ function Park_slot_info(props) {
                     <div className='flex-1'></div>
 
                 </div>
-
+                {console.log("Events :: ",events)}
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     events={events}
