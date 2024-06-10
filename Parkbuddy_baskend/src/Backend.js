@@ -15,6 +15,11 @@ let Fetch_item;
 let response;
 let response_array=[];
 
+// Start the server
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+});
+
 app.get('/User/:UserID', async (req, res) => {
     try {
         //first part of user objact
@@ -22,6 +27,7 @@ app.get('/User/:UserID', async (req, res) => {
         console.log("Asking for ", req.params.UserID);
         response = await Fetch_item.get();
         user = {
+            "User_id": response.id,
             "User_name": response.data().User_name,
             "Car_park_name": response.data().Car_park_name,
             "num_of_lots": response.data().num_of_lots,
@@ -50,7 +56,7 @@ app.get('/User/:UserID', async (req, res) => {
             response.forEach(doc => {
                 newarray.push(doc.data());
             });
-            // console.log("Newst array: ",newarray);
+            console.log("User::: ",user);
             response_array[i].lot_events = response.docs.map(doc => doc.data());
         }
         
@@ -77,7 +83,22 @@ app.get('/Parklot/:lotid', (req, res) => {
     res.send(sending_park_lot);
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+app.post('/Add_event/:UserID/:lotid',async (req, res) => {
+    let Lot_id=req.params.lotid;
+    let event_data=req.body;
+    let now_user_name=req.params.UserID;
+
+    try {
+        const response1 = await db.collection("Car_Parks").doc(now_user_name).collection("UserLots").doc(Lot_id).collection("lot_events").add(event_data);
+        console.log("Response: ",response1.id);
+        
+    } catch (error) {
+        console.error("Error sending data: ", error);
+        
+    }
+
+    
+
 });
+
+

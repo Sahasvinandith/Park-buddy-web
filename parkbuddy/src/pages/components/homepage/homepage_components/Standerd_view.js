@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import { User } from "../../../../exampleUser";
 import Park_slot_info from "./Parkview/Park_slot_clicked";
 import { fetchUser } from "../../../../API/Fetch_backend";
 
-export let Send_user;
+
 
 export const Standard_view = () => {
 
@@ -16,7 +15,7 @@ export const Standard_view = () => {
     let Total_lots = 0;
     let cur_parklot = 'sdss';
     const divElements = [];
-    let assign_user
+    let assign_user;
 
     useEffect(() => {
         async function main (){
@@ -49,7 +48,6 @@ export const Standard_view = () => {
         )
     }
 
-    Send_user=Cur_User;
 
     let User_User_lots = Cur_User.UserLots;
 
@@ -147,7 +145,7 @@ export const Standard_view = () => {
 
                 </div>
 
-            </div> : <Park_slot_info park_lot_id={park_lot_name} changemode={() => { changeView(!Park_view) }} />}
+            </div> : <Park_slot_info park_lot_id={park_lot_name} User_id={Cur_User.User_id} changemode={() => { changeView(!Park_view) }} />}
 
         </div>
     )

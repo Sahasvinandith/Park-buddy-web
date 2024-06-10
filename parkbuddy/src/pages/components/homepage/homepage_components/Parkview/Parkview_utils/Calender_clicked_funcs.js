@@ -1,5 +1,5 @@
-
-export function Compare_dates (Selcted_date_date){
+import { Add_newevent } from "../../../../../../API/Fetch_backend";
+export function Compare_dates (Selcted_date_date){//this page was dedicated to store function that would need in calender methods
     
     
     let now_time=new Date().getTime();
@@ -13,5 +13,21 @@ export function Compare_dates (Selcted_date_date){
         console.log("Diff time: ",diff);
         console.log("Past event");
     }
+
+}
+
+export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_number){ 
+
+    let newEvent = {
+        "title":title,
+        "start":start,
+        "end":end,
+        "Vehicle":Vehicle,
+        "Vehicle_number":Vehicle_number
+    }
+
+    Add_newevent(Parklot_id,User_id,newEvent);
+
+
 
 }

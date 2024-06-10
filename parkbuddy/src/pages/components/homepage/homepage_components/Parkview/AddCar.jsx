@@ -2,15 +2,17 @@ import { Car, SquareX,UserPlus } from "lucide-react";
 import { Button, Cascader } from "antd";
 import { useEffect, useState } from "react";
 import { InputNumber } from "antd";
+import { Add_event } from "./Parkview_utils/Calender_clicked_funcs";
 
 let username = "Client-0";
 let Vehicle_type = "Car";
 let Vehicle_number;
 let Arrival_time = new Date();
 let Expected_duration=3;
+let End_time;
 
 function Add_car_popup(props) {
-    const { Close } = props;
+    const { Close,Park_lot_id,User_id } = props;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md z-10 flex flex-col justify-center items-center">
@@ -34,14 +36,21 @@ function Add_car_popup(props) {
                                 <div className="flex-1 p-2 text-xl flex justify-center items-center">
                                     <Cascader
                                         size="large"
-                                        aria-pressed
+
 
                                         style={{ width: "40%", fontSize: 68 }}
                                         options={[{ value: "Car", label: "Car" }, { value: "Van", label: "Van" }, { value: "Lorry", label: "Lorry" }, { value: "Others", label: "Others" }]}
                                         defaultValue={"Car"}
 
+
                                         onChange={(e)=>{
-                                            Vehicle_type=e[0];
+
+                                            try {
+                                                Vehicle_type=e[0];
+                                            } catch (error) {
+                                                Vehicle_type=[];
+                                            }
+                                            console.log("Vehicle:: ",e);
                                            
                                         }}
                                     />
@@ -60,15 +69,16 @@ function Add_car_popup(props) {
                                 <div className="flex-1 p-2 flex justify-center items-center">{Arrival_time.toLocaleString()}</div><hr />
                                 <div className="flex-1 p-2 flex justify-center items-center"><InputNumber changeOnWheel defaultValue={3} onChange={(e)=>{
                                     Expected_duration=e;
-                                    console.log("Expected duration: ",Expected_duration);
+                                    End_time=new Date(Arrival_time.getTime() + Expected_duration*60*60*1000);
                                 }}/></div>
 
                             </div>
 
 
                         </div>
+                        
                         <div className="w-full h-auto flex justify-center items-center">
-                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3">Add to spot <UserPlus/></Button>
+                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3" onClick={() => { Add_event(Park_lot_id,User_id,username,Arrival_time,End_time, Vehicle_type, Vehicle_number); Close(); }} >Add to spot <UserPlus/></Button>
                         </div>
                     </div>
 

@@ -23,7 +23,7 @@ function Park_slot_info(props) {
 
 
 
-    const { park_lot_id, changemode } = props;
+    const { park_lot_id,User_id, changemode } = props;
 
     const [events, setevents] = useState([]);
 
@@ -32,9 +32,9 @@ function Park_slot_info(props) {
             let temp_Park_Lot;
             await fetchParklot(park_lot_id).then((data) => {
                 temp_Park_Lot = data;
-                console.log("Park lot11: ", temp_Park_Lot);
+                
                 setevents(temp_Park_Lot.lot_events);
-                console.log("Events11: ", temp_Park_Lot.lot_events);
+                
             });
         }
         main();
@@ -74,7 +74,7 @@ function Park_slot_info(props) {
                     <div className='flex-1'></div>
 
                 </div>
-                {console.log("Events :: ", events)}
+                
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     events={events}
@@ -113,7 +113,7 @@ function Park_slot_info(props) {
                 />
             </div>
             {event_popup_show ? <Popup_event Close={() => change_event_popup(false)} Info={Popup_info} /> : ""}
-            {Add_car_popup_show ? <Add_car_popup Close={() => change_addcar_popup_event(false)} Info={Popup_info} /> : ""}
+            {Add_car_popup_show ? <Add_car_popup Close={() => change_addcar_popup_event(false)} Park_lot_id={park_lot_id} User_id={User_id} Info={Popup_info} /> : ""}
 
         </div>
     )
