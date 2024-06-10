@@ -7,7 +7,7 @@ export const User = {
             "name": "Lot_1",
             "lot_events": [
                 {
-                    "title": 'Client 1',
+                    "title": 'Client 11',
                     start: '2024-06-06T20:30',
                     end:'2024-06-06T22:30',
                     "Vehicle":"aqua",
@@ -18,7 +18,7 @@ export const User = {
                     
                 },
                 {
-                    title: 'Client 3',
+                    title: 'Client 13',
                     start: '2024-06-06T15:30',
                     end:'2024-06-06T20:30',
                     "Vehicle":"aqua",
@@ -28,7 +28,7 @@ export const User = {
                     
                 },
                 {
-                    title: 'Client 2',
+                    title: 'Client 12',
                     start: '2024-06-08T07:30',
                     end:'2024-06-08T10:30',
                     "Vehicle":"aqua",

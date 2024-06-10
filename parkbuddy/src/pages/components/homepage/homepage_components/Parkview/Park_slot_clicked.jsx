@@ -2,44 +2,63 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from '@fullcalendar/interaction';
-import { User } from '../../../../../exampleUser';
+
 import { SquareArrowLeft } from 'lucide-react';
 import Popup_event from './Event_clicked';
 import Create_event from './Date_clicked';
 import { Compare_dates } from './Parkview_utils/Calender_clicked_funcs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CirclePlus } from 'lucide-react';
 import Add_car_popup from './AddCar';
+import { fetchParklot } from '../../../../../API/Fetch_backend';
 
 
 
 
 
-let current_event={};
-var Cur_User=User;
+
+let current_event = {};
 
 function Park_slot_info(props) {
 
-    
-    
+
+
     const { park_lot_id, changemode } = props;
 
-    
+    const [events, setevents] = useState([]);
 
-    const [Popup_info,set_pop_up_info]=useState({"hi":"hui"})
-    const [events,setevents]=useState(Cur_User.UserLots[park_lot_id].lot_events);
+    useEffect(() => {
+        async function main() {
+            let temp_Park_Lot;
+            await fetchParklot(park_lot_id).then((data) => {
+                temp_Park_Lot = data;
+                console.log("Park lot11: ", temp_Park_Lot);
+                setevents(temp_Park_Lot.lot_events);
+                console.log("Events11: ", temp_Park_Lot.lot_events);
+            });
+        }
+        main();
+    }, [])
 
-    
+
+
+
+
+
+    const [Popup_info, set_pop_up_info] = useState({ "hi": "hui" })
+
+
+
     // var events = Cur_User.UserLots[park_lot_id].lot_events;
 
-    const[event_popup_show,change_event_popup]=useState(false);
-    const[Add_car_popup_show,change_addcar_popup_event]=useState(false);
-    
+    const [event_popup_show, change_event_popup] = useState(false);
+    const [Add_car_popup_show, change_addcar_popup_event] = useState(false);
+
 
     return (
         <div className='w-full  h-[calc(100vh-100px)] flex flex-col'>
 
-        
+
 
             <div className=' w-full  h-[calc(100vh-100px)] flex flex-col px-2 justify-between'>
                 <div className='flex flex-row w-full justify-between'>
@@ -48,14 +67,14 @@ function Park_slot_info(props) {
                             <SquareArrowLeft size={'30px'} />
                             Go back
                         </button>
-                        <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={()=>{change_addcar_popup_event(true)}} >Add Park <CirclePlus size={"30px"} /></button>
+                        <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={() => { change_addcar_popup_event(true) }} >Add Park <CirclePlus size={"30px"} /></button>
                     </div>
-                    
+
                     <div className='ml-20 text-2xl font-serif font-bold w-96 text-center flex-1'>{park_lot_id}</div>
                     <div className='flex-1'></div>
 
                 </div>
-                {console.log("Events :: ",events)}
+                {console.log("Events :: ", events)}
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     events={events}
@@ -65,25 +84,25 @@ function Park_slot_info(props) {
                         center: "title",
                         end: "dayGridMonth,timeGridWeek,timeGridDay"
                     }}
-                    eventClick= {function(info) {
+                    eventClick={function (info) {
                         info.jsEvent.preventDefault();
                         console.log(info.event.toJSON());
                         change_event_popup(true);
-                        current_event={
-                            "Parking_lot":park_lot_id,
-                            "Driver_name":info.event.title,
-                            "Vehicle":info.event.toJSON().extendedProps.Vehicle,
-                            "Start_time":info.event.start,
-                            
-                            "End_time":info.event.end,
-                            "Vehicle_number":info.event.toJSON().extendedProps.Vehicle_number,
-                            
+                        current_event = {
+                            "Parking_lot": park_lot_id,
+                            "Driver_name": info.event.title,
+                            "Vehicle": info.event.toJSON().extendedProps.Vehicle,
+                            "Start_time": info.event.start,
+
+                            "End_time": info.event.end,
+                            "Vehicle_number": info.event.toJSON().extendedProps.Vehicle_number,
+
                         }
-                        
+
                         set_pop_up_info(current_event);
-                        
+
                     }}
-                    
+
                     dateClick={function (info) {
                         Compare_dates(info.date);
 
@@ -93,9 +112,9 @@ function Park_slot_info(props) {
                     height={"90vh"}
                 />
             </div>
-            {event_popup_show?<Popup_event Close={()=>change_event_popup(false)} Info={Popup_info}/>:""}
-            {Add_car_popup_show?<Add_car_popup Close={()=>change_addcar_popup_event(false)} Info={Popup_info}/>:""}
-            
+            {event_popup_show ? <Popup_event Close={() => change_event_popup(false)} Info={Popup_info} /> : ""}
+            {Add_car_popup_show ? <Add_car_popup Close={() => change_addcar_popup_event(false)} Info={Popup_info} /> : ""}
+
         </div>
     )
 }

@@ -3,11 +3,12 @@ import { User } from "../../../../exampleUser";
 import Park_slot_info from "./Parkview/Park_slot_clicked";
 import { fetchUser } from "../../../../API/Fetch_backend";
 
-
+export let Send_user;
 
 export const Standard_view = () => {
 
-    const [Cur_User, set_user] = useState(User);
+    const [Cur_User, set_user] = useState("Loading");
+    const [check_state, set_check] = useState();
 
     let newUser = {};
     let free_lots = 0;
@@ -15,18 +16,45 @@ export const Standard_view = () => {
     let Total_lots = 0;
     let cur_parklot = 'sdss';
     const divElements = [];
+    let assign_user
 
-    fetchUser();
+    useEffect(() => {
+        async function main (){
+            assign_user =await fetchUser();
+            set_user(assign_user);
+            
+        }
+        main();
+    },[])
+
+    
+
+    
+
+
+
+    
+
 
     const [park_lot_name, set_name] = useState("null");
 
 
 
     const [Park_view, changeView] = useState(true);
+
+    if(Cur_User=="Loading"){
+        return(
+            //loading screen
+            <div>Loading</div>
+        )
+    }
+
+    Send_user=Cur_User;
+
     let User_User_lots = Cur_User.UserLots;
 
 
-    
+
 
 
     for (let key in User_User_lots) {
@@ -37,11 +65,11 @@ export const Standard_view = () => {
 
             Total_lots += 1;
             for (let cur_event in element.lot_events) {
-                
+
 
                 if (Object.hasOwnProperty.call(element.lot_events, cur_event)) {
                     const now_event = element.lot_events[cur_event];
-                    
+
                     let start = now_event.start;
                     let end = now_event.end;
                     const startTime = new Date(start);
