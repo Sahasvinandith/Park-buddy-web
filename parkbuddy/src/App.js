@@ -1,8 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import { Homepage } from "./pages/Homepage";
-import LoginForm from "./pages/components/LoginForm/LoginForm"
-// import { Park_slot_view } from "./pages/components/homepage/homepage_components/Parkview/Park_slot_clicked";
-import Park_slot_info from "./pages/components/homepage/homepage_components/Parkview/Park_slot_clicked";
+import { Homepage } from "./pages/components/homepage/Homepage";
+import LoginForm from "./pages/components/LoginForm/LoginForm";
 function App() {
   return (
     <div className>

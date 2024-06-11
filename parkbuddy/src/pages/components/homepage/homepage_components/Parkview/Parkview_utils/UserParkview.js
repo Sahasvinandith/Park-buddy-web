@@ -1,5 +1,5 @@
 
-import { Standard_view } from "../Standerd_view";
+import { Standard_view } from "./Standerd_view";
 
 export const Parkview=()=>{
     

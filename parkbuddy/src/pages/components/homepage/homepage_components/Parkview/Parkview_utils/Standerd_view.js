@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import Park_slot_info from "./Parkview/Park_slot_clicked";
-import { fetchUser } from "../../../../API/Fetch_backend";
+import Park_slot_info from "./Park_slot_clicked";
+import { fetchUser } from "../../../../../../API/Fetch_backend";
 
 
 

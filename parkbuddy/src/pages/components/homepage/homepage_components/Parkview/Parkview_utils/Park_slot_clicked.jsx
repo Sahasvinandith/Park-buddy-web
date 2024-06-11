@@ -6,11 +6,11 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { SquareArrowLeft } from 'lucide-react';
 import Popup_event from './Event_clicked';
 import Create_event from './Date_clicked';
-import { Compare_dates } from './Parkview_utils/Calender_clicked_funcs';
+import { Compare_dates } from './Calender_clicked_funcs';
 import React, { useEffect, useState } from 'react';
 import { CirclePlus } from 'lucide-react';
 import Add_car_popup from './AddCar';
-import { fetchParklot } from '../../../../../API/Fetch_backend';
+import { fetchParklot } from '../../../../../../API/Fetch_backend';
 
 
 

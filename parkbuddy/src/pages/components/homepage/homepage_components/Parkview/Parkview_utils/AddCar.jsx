@@ -2,7 +2,7 @@ import { Car, SquareX,UserPlus } from "lucide-react";
 import { Button, Cascader } from "antd";
 import { useEffect, useState } from "react";
 import { InputNumber } from "antd";
-import { Add_event } from "./Parkview_utils/Calender_clicked_funcs";
+import { Add_event } from "./Calender_clicked_funcs";
 
 let username = "Client-0";
 let Vehicle_type = "Car";
