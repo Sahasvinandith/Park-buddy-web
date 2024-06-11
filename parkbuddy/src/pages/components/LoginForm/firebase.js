@@ -7,12 +7,12 @@ import {getAuth } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAB8V1VvFmESz-SPtwh6RzX3w70-N_3yx4",
-  authDomain: "authentication-bb294.firebaseapp.com",
-  projectId: "authentication-bb294",
-  storageBucket: "authentication-bb294.appspot.com",
-  messagingSenderId: "570365762486",
-  appId: "1:570365762486:web:c714f635efb0156d7c3f17"
+  apiKey: "AIzaSyC087O7xgFqfES-bdswNCttRcCbRFOXFlc",
+  authDomain: "parkbuddy-31f23.firebaseapp.com",
+  projectId: "parkbuddy-31f23",
+  storageBucket: "parkbuddy-31f23.appspot.com",
+  messagingSenderId: "226964192727",
+  appId: "1:226964192727:web:05c1d32fd2befb8ffc9f92"
 };
 
 // Initialize Firebase

@@ -1,3 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.bodyDiv {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('../Assets/Carpark7.jpg');
+  /* no-repeat; */
+  background-size: cover;
+  background-position: center;
+}
+
 .wrapper {
     width: 420px;
     height: 450px;
@@ -11,7 +35,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    transition: height 0.2s ease;
+    transition: height 0.3s ease;
     position: relative;
 }
 .wrapper.active {
