@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-import { auth } from './firebase';
+import { auth } from '../../../API/firebase_auth';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
+import Signup_contents from './Signup_contents';
 
 const LoginForm = () => {
     const navigator = useNavigate();
@@ -24,9 +24,9 @@ const LoginForm = () => {
 
         //validation success
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            console.log("Account created");
-            navigator('Home');
+            let tempuser = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("Account created: ",tempuser.user.email);
+            navigator("ParkBuddy/"+tempuser.user.email);
             // redirect the user to a different page
         } catch (err) {
             console.log("Error creating user : ",err);
@@ -39,9 +39,9 @@ const LoginForm = () => {
         e.preventDefault();
         try {
             console.log("Login as user: ",email, password);
-            await signInWithEmailAndPassword(auth, email, password);
-            console.log("Login Success");
-            navigator('Home');
+            let tempuser=await signInWithEmailAndPassword(auth, email, password);
+            console.log("Login Success as user: ",tempuser.user.email);
+            navigator("ParkBuddy/"+tempuser.user.email);
             //redirect the user to a different page after successful login
         } catch (err) {
             console.log("Error login as user: ",err);
