@@ -16,7 +16,7 @@ export const Homepage = () => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUser(user);
+                setUser(user.email);
             } else {
                 navigate('/');
             }
@@ -39,7 +39,7 @@ export const Homepage = () => {
                     <Homepage_menu className="h-auto" />
                 </div>
                 <div className="my-2 w-screen overflow-y-scroll">
-                    <Parkview />
+                    <Parkview Usermail={user} />
                 </div>
             </div>
         </div>

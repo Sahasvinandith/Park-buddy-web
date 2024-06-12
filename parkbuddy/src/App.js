@@ -8,7 +8,7 @@ function App() {
       <Routes>
         <Route path="/" index element={<LoginForm/>}/>   
         <Route path="/ParkBuddy/:User_email" exact element={<Homepage/>}/>
-        <Route path="/User_info" exact element={<Signup_contents/>}/>
+        <Route path="/User_info/:User_email/:User_name" element={<Signup_contents/>}/>
       </Routes>
     </div>
   );

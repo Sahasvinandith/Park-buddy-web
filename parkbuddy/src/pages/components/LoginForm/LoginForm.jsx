@@ -6,8 +6,10 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'fire
 import { useNavigate } from 'react-router-dom';
 import Signup_contents from './Signup_contents';
 
+// let UserName="";
 const LoginForm = () => {
     const navigator = useNavigate();
+    const [UserName,setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +28,8 @@ const LoginForm = () => {
         try {
             let tempuser = await createUserWithEmailAndPassword(auth, email, password);
             console.log("Account created: ",tempuser.user.email);
-            navigator("ParkBuddy/"+tempuser.user.email);
+            console.log("UserName: ",UserName);
+            navigator("User_info/"+email+"/"+UserName);
             // redirect the user to a different page
         } catch (err) {
             console.log("Error creating user : ",err);
@@ -65,11 +68,11 @@ const LoginForm = () => {
                         <h1>Welcome back!</h1>
                         <div className="input-box">
                             <input type="text" placeholder='UserName' required onChange={(e) => setEmail(e.target.value)} />
-                            <FaUser className="icon" />
+                            <FaUser color='black' className="icon" />
                         </div>
                         <div className="input-box">
                             <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-                            <FaLock className="icon" />
+                            <FaLock color='black' className="icon" />
                         </div>
                         <button type="submit">Sign in</button>
                         <div className='register-link'>
@@ -83,7 +86,7 @@ const LoginForm = () => {
                         <h1>Welcome!</h1>
                         <h2>Sign up to use Parkbuddy</h2>
                         <div className="input-box">
-                            <input type="text" placeholder='UserName' required />
+                            <input type="text" placeholder='UserName' value={UserName} required onChange={(e) => setUserName(e.target.value)}/>
                             <FaUser className="icon" />
                         </div>
                         <div className="input-box">
@@ -99,7 +102,7 @@ const LoginForm = () => {
                             <FaLock className="icon" />
                         </div>
                         <div className="remember-forgot">
-                            <label><input type="checkbox" />I agree to the terms and conditions</label>
+                            <label><input type="checkbox" required />I agree to the terms and conditions</label>
                         </div>
                         <button type="submit">Sign up</button>
                         <div className='register-link'>

@@ -4,7 +4,7 @@ import { fetchUser } from "../../../../../../API/Fetch_backend";
 
 
 
-export const Standard_view = () => {
+export const Standard_view = ({Usermail}) => {
 
     const [Cur_User, set_user] = useState("Loading");
     const [check_state, set_check] = useState();
@@ -19,7 +19,7 @@ export const Standard_view = () => {
 
     useEffect(() => {
         async function main (){
-            assign_user =await fetchUser();
+            assign_user =await fetchUser(Usermail);
             set_user(assign_user);
             
         }

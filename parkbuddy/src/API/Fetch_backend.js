@@ -4,14 +4,15 @@ let Username="User1@gmail.com";
 
 let User={"User":"Initial user"};
 
-export async function fetchUser() {
-    console.log("Fetching user...");
+export async function fetchUser(User_email) {
+    console.log("Fetching user...",User_email);
+    
     try {
-        const response = await axios.get('http://localhost:8000/User/' + Username);
+        const response = await axios.get('http://localhost:8000/User/' + User_email);
         
         User=response.data;
-        console.log("Response: ",User);
-        console.log("Check: ",User.UserLots.Lot_1.lot_events[0].start);
+        // console.log("Response: ",User);
+        // console.log("Check: ",User.UserLots.Lot_1.lot_events[0].start);
         
         return User;
         
@@ -48,7 +49,23 @@ export async function Add_newevent(Parklot_id,User_id,eventdata) {
         console.error("Error Sending data: ", error);
     }
 }
+    
+export async function Create_user(User_email,User_name,Car_park_name,Car_park_address,Num_car_park_slots) {
+    let User_info={
+        User_email:User_email,
+        User_name:User_name,
+        Car_park_name:Car_park_name,
+        Car_park_address:Car_park_address,
+        Num_car_park_slots:Num_car_park_slots
+    }
+    try {
+        const response = await axios.post('http://localhost:8000/Add_User',User_info);
         
+    } catch (error) {
+        
+    }
+
+}
         
 
 

@@ -1,25 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .bodyDiv {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: url('../Assets/Carpark7.jpg');
-  /* no-repeat; */
-  background-size: cover;
-  background-position: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../Assets/Carpark7.jpg');
+    /* no-repeat; */
+    background-size: cover;
+    background-position: center;
+}
+
+.newbody {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    /* -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    background: url('../Assets/Carpark7.jpg');
+    /* no-repeat; */
+    background-size: cover;
+    background-position: center;
+}
+
+.enterinfo {
+    width: 45%;
+    height: 80vh;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    transition: height 0.3s ease;
+    position: relative;
 }
 
 .wrapper {
@@ -38,6 +72,7 @@
     transition: height 0.3s ease;
     position: relative;
 }
+
 .wrapper.active {
     height: 620px;
 }
@@ -97,6 +132,19 @@ form .input-box {
     font-size: 16px;
     color: #fff;
     padding: 0 20px 0 45px;
+}
+
+.newinputbox input {
+    width: max-content;
+    height: max-content;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(196, 196, 220,0.4);
+    border-radius: 8px;
+    font-size: 16px;
+    color: #fff;
+    padding: 3px 20px 3px 25px;
 }
 
 .input-box input::placeholder {
