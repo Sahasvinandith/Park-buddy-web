@@ -1,5 +1,8 @@
+import React from 'react';
+import {Link} from 'react-router-dom';
 import './Navbar.css'
 import Icon from '../../Assets/Icon.jpg'
+
 const Navbar = () => {
     return(
         <div className='nav'>
@@ -9,7 +12,7 @@ const Navbar = () => {
             <ul className = "nav-menu">
                 <li>Home</li>
                 <li>About</li>
-                <li className='nav-contact'>Contact</li>
+                <li className='nav-contact'><Link to="/contact">Contact</Link></li>
             </ul> 
 
         </div>

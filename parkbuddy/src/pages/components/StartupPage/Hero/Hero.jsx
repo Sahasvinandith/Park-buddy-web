@@ -1,16 +1,24 @@
+import React from 'react'; //changed
 import './Hero.css'
 import arrow from '../../Assets/arrow.png'
 import play from '../../Assets/play.png'
 import pause from '../../Assets/pause.png'
+import { useNavigate } from 'react-router-dom';
 
 const Hero = ({heroData,setHeroCount,heroCount,setPlayStatus,playStatus}) => {
+    const navigate = useNavigate();
+
+    const handleGetStartedClick = () => {
+        navigate('/login');
+    };//changed 
+
     return(
         <div className = "hero">
             <div className="hero-text">
                 <p>{heroData.text1}</p>
                 <p>{heroData.text2}</p>
             </div>
-            <div className="hero-explore">
+            <div className="hero-explore" onClick={handleGetStartedClick}>
                 <p>Get Started!</p>
                 {/* Add the link to the login page */}
                 <img src={arrow} alt=""/>
