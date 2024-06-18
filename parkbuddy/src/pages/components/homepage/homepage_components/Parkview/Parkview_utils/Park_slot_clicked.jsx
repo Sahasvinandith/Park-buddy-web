@@ -64,7 +64,7 @@ function Park_slot_info(props) {
                 <div className='flex flex-row w-full justify-between'>
                     <div className='flex-1 flex flex-row gap-5'>
                         <button className=' bg-slate-600 text-yellow-200 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-lg gap-2 items-center hover:bg-slate-700 ' onClick={() => { changemode(); }} >
-                            <SquareArrowLeft size={'30px'} />
+                            <SquareArrowLeft size={'30px'}/>
                             Go back
                         </button>
                         <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={() => { change_addcar_popup_event(true) }} >Add Park <CirclePlus size={"30px"} /></button>

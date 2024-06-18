@@ -84,6 +84,7 @@ app.post('/Add_event/:UserID/:lotid', async (req, res) => {
     let Lot_id = req.params.lotid;
     let event_data = req.body;
     let now_user_name = req.params.UserID;
+    console.log("ADD event to user ",now_user_name," Lot id ",Lot_id," with data ",event_data);
 
     try {
         const response1 = await db.collection("Car_Parks").doc(now_user_name).collection("UserLots").doc(Lot_id).collection("lot_events").add(event_data);

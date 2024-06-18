@@ -9,7 +9,7 @@ let Vehicle_type = "Car";
 let Vehicle_number;
 let Arrival_time = new Date();
 let Expected_duration=3;
-let End_time;
+let End_time=new Date(Arrival_time.getTime() + 3*60*60*1000);
 
 function Add_car_popup(props) {
     const { Close,Park_lot_id,User_id } = props;
