@@ -16,8 +16,10 @@ export const Homepage = () => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log("User is authenticated: ", user.email); //changed
                 setUser(user.email);
             } else {
+                console.log("No user is authenticated, redirecting...");//changed
                 navigate('/');
             }
             setLoading(false);

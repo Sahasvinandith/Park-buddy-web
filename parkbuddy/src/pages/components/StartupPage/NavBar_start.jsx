@@ -2,6 +2,7 @@
 
 
 import {useState,useEffect} from "react"
+import { useNavigate } from "react-router-dom";  //changed
 import Background from "./Background/Background";
 import Navbar from "./Navbar/Navbar";
 import Hero from "./Hero/Hero";
@@ -15,12 +16,17 @@ const Navbar_start = () => {
 
     const [heroCount,setHeroCount] = useState(0);
     const [playStatus,setPlayStatus] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() =>{
         setInterval(() => {
             setHeroCount((count) => {return count===2?0:count+1})
         },3000);
     },[])
+
+    const goToLogin = () => {
+        navigate("/login");
+      }; //changed
 
     return (
         <div>
