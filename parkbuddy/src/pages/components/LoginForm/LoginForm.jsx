@@ -29,7 +29,7 @@ const LoginForm = () => {
             let tempuser = await createUserWithEmailAndPassword(auth, email, password);
             console.log("Account created: ",tempuser.user.email);
             console.log("UserName: ",UserName);
-            navigator("User_info/"+email+"/"+UserName);
+            navigator("/User_info/"+email+"/"+UserName);
             // redirect the user to a different page
         } catch (err) {
             console.log("Error creating user : ",err);
@@ -44,7 +44,7 @@ const LoginForm = () => {
             console.log("Login as user: ",email, password);
             let tempuser=await signInWithEmailAndPassword(auth, email, password);
             console.log("Login Success as user: ",tempuser.user.email);
-            navigator("ParkBuddy/"+tempuser.user.email);
+            navigator("/ParkBuddy/"+tempuser.user.email);
             //redirect the user to a different page after successful login
         } catch (err) {
             console.log("Error login as user: ",err);

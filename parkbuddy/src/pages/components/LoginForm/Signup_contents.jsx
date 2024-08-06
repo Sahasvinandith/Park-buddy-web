@@ -1,6 +1,6 @@
 import './LoginForm.css';
 import { Create_user } from '../../../API/Fetch_backend';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 let Car_park_name='';
@@ -9,6 +9,7 @@ let Num_car_park_slots='';
 const Signup_contents = () => {
 
     const { User_email, User_name } = useParams();
+    const navigator=useNavigate();
 
     return (
         <div className='newbody'>
@@ -59,7 +60,7 @@ const Signup_contents = () => {
 
                 </div>
                 <div className='flex-1 flex justify-center items-center'>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={() => { Create_user(User_email,User_name, Car_park_name, Car_park_address, Num_car_park_slots);}}>Submit</button>
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={() => { Create_user(User_email,User_name, Car_park_name, Car_park_address, Num_car_park_slots);navigator('/login');}}>Submit</button>
                 </div>
 
 
