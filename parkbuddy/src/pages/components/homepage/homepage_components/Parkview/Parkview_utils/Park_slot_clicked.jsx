@@ -23,22 +23,15 @@ function Park_slot_info(props) {
 
 
 
-    const { park_lot_id,User_id, changemode } = props;
+    const { park_lot_id,User_id, changemode,user } = props;
 
     const [events, setevents] = useState([]);
 
     useEffect(() => {
-        async function main() {
-            let temp_Park_Lot;
-            await fetchParklot(park_lot_id).then((data) => {
-                temp_Park_Lot = data;
-                
-                setevents(temp_Park_Lot.lot_events);
-                
-            });
-        }
-        main();
-    }, [])
+        setevents(user.UserLots[park_lot_id].lot_events)
+    }, [user])
+
+    console.log("events: ", events[0].start);
 
 
 

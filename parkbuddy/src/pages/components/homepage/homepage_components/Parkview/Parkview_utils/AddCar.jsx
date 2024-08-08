@@ -78,7 +78,7 @@ function Add_car_popup(props) {
                         </div>
                         
                         <div className="w-full h-auto flex justify-center items-center">
-                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3" onClick={() => { Add_event(Park_lot_id,User_id,username,Arrival_time,End_time, Vehicle_type, Vehicle_number); Close(); }} >Add to spot <UserPlus/></Button>
+                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3" onClick={() => { Add_event(Park_lot_id,User_id,username,Arrival_time.toISOString(),Expected_duration,End_time.toISOString(), Vehicle_type, Vehicle_number); Close(); }} >Add to spot <UserPlus/></Button>
                         </div>
                     </div>
 

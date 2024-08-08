@@ -17,14 +17,35 @@ export const Standard_view = ({Usermail}) => {
     const divElements = [];
     let assign_user;
 
-    useEffect(() => {
-        async function main (){
-            assign_user =await fetchUser(Usermail);
-            set_user(assign_user);
+    // useEffect(() => {
+    //     async function main (){
+    //         assign_user =await fetchUser(Usermail);
+    //         set_user(assign_user);
             
+    //     }
+    //     main();
+    // },[])
+// Initialize with null or appropriate initial value
+    const [loading, setLoading] = useState(true); // Add a loading state
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const user = await fetchUser(Usermail);
+                console.log("User:+ ", user);
+                set_user(user);
+            } catch (error) {
+                console.error("Error fetching user:", error);
+                set_user(null); // Handle errors
+            } finally {
+                setLoading(false); // Set loading to false once fetch is complete
+            }
         }
-        main();
-    },[])
+
+        if (Usermail) {
+            fetchData();
+        }
+    }, [Usermail]); // Add Usermail to dependency array to refetch if Usermail changes
 
     
 
@@ -50,6 +71,7 @@ export const Standard_view = ({Usermail}) => {
 
 
     let User_User_lots = Cur_User.UserLots;
+    console.log("User lots+: ", User_User_lots);
 
 
 
@@ -145,7 +167,7 @@ export const Standard_view = ({Usermail}) => {
 
                 </div>
 
-            </div> : <Park_slot_info park_lot_id={park_lot_name} User_id={Cur_User.User_id} changemode={() => { changeView(!Park_view) }} />}
+            </div> : <Park_slot_info user={Cur_User} park_lot_id={park_lot_name} User_id={Cur_User.User_id} changemode={() => { changeView(!Park_view) }} />}
 
         </div>
     )
