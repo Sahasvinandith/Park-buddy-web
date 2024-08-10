@@ -1,9 +1,7 @@
 import axios from "axios";
 import {database} from "..//API/firebase_auth";
 import { collection, getDocs ,doc,getDoc,addDoc} from "firebase/firestore";
-let Username = "User1@gmail.com";
 
-let User = { "User": "Initial user" };
 
 // export async function fetchUser(User_email) {
 //     console.log("Fetching user...",User_email);
@@ -89,12 +87,13 @@ export async function fetchUser(Usermail) {
     }
 }
 
-export async function fetchParklot(lotid) {
-    // console.log("Fetching user...");
+export async function fetchParklot(lotid,User_id) {
+    console.log("Fetching parklot...");
     try {
-        const response = await axios.get('http://localhost:8000/Parklot/' + lotid);
+        const response = await axios.get('http://localhost:8000/Parklot/'+User_id + '/' + lotid);
 
         let park_lot = response.data;
+        console.log("Response: ", park_lot);
 
         return park_lot;
 
@@ -117,11 +116,21 @@ export async function fetchParklot(lotid) {
 //     }
 // }
 
-export async function Add_newevent(Lot_id,now_user_name, event_data) {
+export async function Check_events(User_id,event_data) {
+    try {
+        const response = await axios.post('http://localhost:8000/Check_events/'+User_id,event_data);
+    }
+    catch (error) {
+        console.error("Error Sending data: ", error);
+    }
+}
+
+export async function Add_newevent(Lot_id,User_id, event_data) {
+    
     try {
         // Reference to the lot_events collection
         const lotEventsCollectionRef = collection(
-            doc(collection(database, "Car_Parks"), now_user_name),
+            doc(collection(database, "Car_Parks"), User_id),
             "UserLots",
             Lot_id,
             "lot_events"

@@ -12,7 +12,7 @@ let Expected_duration=3;
 let End_time=new Date(Arrival_time.getTime() + 3*60*60*1000);
 
 function Add_car_popup(props) {
-    const { Close,Park_lot_id,User_id } = props;
+    const { Close,Park_lot_id,User_id,reloadnow } = props;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md z-10 flex flex-col justify-center items-center">
@@ -78,7 +78,7 @@ function Add_car_popup(props) {
                         </div>
                         
                         <div className="w-full h-auto flex justify-center items-center">
-                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3" onClick={() => { Add_event(Park_lot_id,User_id,username,Arrival_time.toISOString(),Expected_duration,End_time.toISOString(), Vehicle_type, Vehicle_number); Close(); }} >Add to spot <UserPlus/></Button>
+                            <Button className="h-full bg-green-400 font-semibold text-white text-xl py-3" onClick={() => { Add_event(Park_lot_id,User_id,username,Arrival_time.toISOString(),End_time.toISOString(), Vehicle_type, Vehicle_number); Close(); }} >Add to spot <UserPlus/></Button>
                         </div>
                     </div>
 

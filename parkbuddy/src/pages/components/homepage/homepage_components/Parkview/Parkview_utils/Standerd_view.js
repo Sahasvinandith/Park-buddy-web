@@ -71,7 +71,6 @@ export const Standard_view = ({Usermail}) => {
 
 
     let User_User_lots = Cur_User.UserLots;
-    console.log("User lots+: ", User_User_lots);
 
 
 

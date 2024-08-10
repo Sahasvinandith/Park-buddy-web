@@ -74,17 +74,28 @@ app.get('/User/:UserID', async (req, res) => {
 
 });
 
-app.get('/Parklot/:lotid', (req, res) => {
+app.get('/Parklot/:UserID/:lotid', (req, res) => {
     let Lot_id = req.params.lotid;
-    let sending_park_lot = user.UserLots[Lot_id];
-    res.send(sending_park_lot);
+    let User_id = req.params.UserID;
+    console.log("Asking for ", Lot_id);
+    Fetch_item = db.collection("Car_Parks").doc(User_id).collection("UserLots").doc(Lot_id);
+    Fetch_item.get().then(doc => {
+        if (!doc.exists) {
+            console.log("No such document!");
+        } else {
+            console.log("Document data:", doc.data());
+            var sending_park_lot = doc.data();
+            res.send(sending_park_lot);
+        }
+    })
+
 });
 
 app.post('/Add_event/:UserID/:lotid', async (req, res) => {
     let Lot_id = req.params.lotid;
     let event_data = req.body;
     let now_user_name = req.params.UserID;
-    console.log("ADD event to user ",now_user_name," Lot id ",Lot_id," with data ",event_data);
+    console.log("ADD event to user ", now_user_name, " Lot id ", Lot_id, " with data ", event_data);
 
     try {
         const response1 = await db.collection("Car_Parks").doc(now_user_name).collection("UserLots").doc(Lot_id).collection("lot_events").add(event_data);
@@ -96,16 +107,147 @@ app.post('/Add_event/:UserID/:lotid', async (req, res) => {
     }
 
 
-
 });
+
+
+
+//for mobile
+app.post('/', async (req, res) => {
+    let event_data = req.body;
+    let now_user_name = "bandu@gmail.com";
+    console.log("ADD event to user ", now_user_name, " with data ", event_data);
+
+    try {
+        const carParkRef = db.collection("Car_Parks").doc(now_user_name).collection("UserLots");
+        const allLotsSnapshot = await carParkRef.get();
+
+        const newEventStart = new Date(event_data.start).toISOString();
+        const newEventEnd = new Date(event_data.end).toISOString();
+
+        let availableSlots = [];
+        let notavailable=[];
+        let Total_Lots=0;
+
+
+        // Iterate through all parking lots in the car park
+        for (let lotDoc of allLotsSnapshot.docs) {
+            Total_Lots++;
+            let Lot_id = lotDoc.id;
+            const eventsRef = carParkRef.doc(Lot_id).collection("lot_events");
+            const existingEventsSnapshot = await eventsRef.get();
+
+            let isOverlap = false;
+
+            // Check for overlaps with existing events
+            existingEventsSnapshot.forEach(doc => {
+                console.log("Existing event: doc:",Lot_id," ",doc.id," - ");
+                const existingEvent = doc.data();
+                const existingEventStart = new Date(existingEvent.start).toISOString();
+                const existingEventEnd = new Date(existingEvent.end).toISOString();
+                console.log("Existing event: ",existingEventStart," ",existingEventEnd);
+                
+
+                if (
+                    (newEventStart < existingEventEnd && newEventEnd > existingEventStart) ||
+                    (newEventStart >= existingEventStart && newEventStart < existingEventEnd)
+                ) {
+                    isOverlap = true;
+                }
+            });
+
+            // If no overlap, add this parking lot to the available slots array
+            if (!isOverlap) {
+                availableSlots.push(Lot_id);
+            }
+            else{
+                notavailable.push(Lot_id);
+            }
+        }
+
+        if (availableSlots.length === 0) {
+            return res.status(400).json({ error: "No available parking slots for the new event." });
+        }
+        else{
+            console.log("Available slots: ", availableSlots);
+            console.log("Not available slots: ", notavailable);
+            
+        }
+
+        // // If there are available slots, you can proceed to add the event to one of them
+        // // Example: Add the event to the first available slot
+        const response1 = await carParkRef.doc(availableSlots[0]).collection("lot_events").add(event_data);
+
+        console.log("Added event to: ", availableSlots[0]);
+        return res.status(200).json({
+            success: "Event added successfully.",
+            availableSlots: availableSlots
+        });
+
+
+    } catch (error) {
+        console.error("Error adding event:", error);
+        return res.status(500).json({ error: "An error occurred while adding the event." });
+    }
+});
+
+
+
+app.post('/Add_event/:UserID/:lotid', async (req, res) => {
+    let Lot_id = req.params.lotid;
+    let event_data = req.body;
+    let now_user_name = req.params.UserID;
+    console.log("ADD event to user ", now_user_name, " Lot id ", Lot_id, " with data ", event_data);
+
+    try {
+        const eventsRef = db.collection("Car_Parks").doc(now_user_name).collection("UserLots").doc(Lot_id).collection("lot_events");
+
+        // Fetch existing events
+        const existingEvents = await eventsRef.get();
+
+        // Parse the start and end times of the new event from the request body
+        const newEventStart = new Date(event_data.start).toISOString();
+        const newEventEnd = new Date(event_data.end).toISOString();
+
+        // Check if the new event overlaps with any existing events
+        let isOverlap = false;
+
+        existingEvents.forEach(doc => {
+            const existingEvent = doc.data();
+            const existingEventStart = new Date(existingEvent.start).toISOString();
+            const existingEventEnd = new Date(existingEvent.end).toISOString();
+
+            // Check if the new event overlaps with the existing event
+            if (
+                (newEventStart < existingEventEnd && newEventEnd > existingEventStart) || // New event starts before the existing event ends and ends after the existing event starts
+                (newEventStart >= existingEventStart && newEventStart < existingEventEnd) // New event starts during the existing event
+            ) {
+                isOverlap = true;
+            }
+        });
+
+        if (isOverlap) {
+            return res.status(400).json({ error: "The new event overlaps with an existing event." });
+        }
+
+        // If no overlap, add the new event
+        const response1 = await eventsRef.add(event_data);
+
+        return res.status(200).json({ success: "Event added successfully." });
+
+    } catch (error) {
+        console.error("Error adding event:", error);
+        return res.status(500).json({ error: "An error occurred while adding the event." });
+    }
+});
+
 
 app.post("/Add_User", async (req, res) => {
     console.log("User data::: ", req.body);
-    let User_email=req.body.User_email;
+    let User_email = req.body.User_email;
     let User_name = req.body.User_name;
     let Car_park_name = req.body.Car_park_name;
     let num_of_lots = req.body.Num_car_park_slots;
-    
+
 
     let stroingobject = {
         "User_name": User_name,
@@ -113,20 +255,20 @@ app.post("/Add_User", async (req, res) => {
         "num_of_lots": num_of_lots
     }
 
-    
+
     try {
         const res = await db.collection('Car_Parks').doc(User_email).set(stroingobject);
 
         for (let index = 1; index <= num_of_lots; index++) {
             const response = await db.collection('Car_Parks').doc(User_email).collection("UserLots").doc("Lot_" + index).set({ "name": "Lot_" + index, "lot_events": [] });
             console.log("Created lot: ", "Lot_" + index);
-            
+
         }
         console.log("User added successfully");
 
-        
+
     } catch (error) {
-        
+
     }
 
 })

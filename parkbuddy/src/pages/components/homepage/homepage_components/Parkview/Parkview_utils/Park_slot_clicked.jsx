@@ -23,16 +23,16 @@ function Park_slot_info(props) {
 
 
 
-    const { park_lot_id,User_id, changemode,user } = props;
+    const { park_lot_id, User_id, changemode, user } = props;
 
     const [events, setevents] = useState([]);
+    var reloader = false;
 
     useEffect(() => {
         setevents(user.UserLots[park_lot_id].lot_events)
     }, [user])
 
-    console.log("events: ", events[0].start);
-
+    
 
 
 
@@ -57,7 +57,7 @@ function Park_slot_info(props) {
                 <div className='flex flex-row w-full justify-between'>
                     <div className='flex-1 flex flex-row gap-5'>
                         <button className=' bg-slate-600 text-yellow-200 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-lg gap-2 items-center hover:bg-slate-700 ' onClick={() => { changemode(); }} >
-                            <SquareArrowLeft size={'30px'}/>
+                            <SquareArrowLeft size={'30px'} />
                             Go back
                         </button>
                         <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={() => { change_addcar_popup_event(true) }} >Add Park <CirclePlus size={"30px"} /></button>
@@ -67,7 +67,7 @@ function Park_slot_info(props) {
                     <div className='flex-1'></div>
 
                 </div>
-                
+
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     events={events}
@@ -106,7 +106,12 @@ function Park_slot_info(props) {
                 />
             </div>
             {event_popup_show ? <Popup_event Close={() => change_event_popup(false)} Info={Popup_info} /> : ""}
-            {Add_car_popup_show ? <Add_car_popup Close={() => change_addcar_popup_event(false)} Park_lot_id={park_lot_id} User_id={User_id} Info={Popup_info} /> : ""}
+            {Add_car_popup_show ? <Add_car_popup Close={() => {
+                change_addcar_popup_event(false);
+
+            }
+
+            } reloadnow={() =>{ reloader = !reloader}} Park_lot_id={park_lot_id} User_id={User_id} Info={Popup_info} /> : ""}
 
         </div>
     )
