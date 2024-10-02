@@ -5,19 +5,30 @@ import { Parkview } from './homepage_components/Parkview/UserParkview'
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { fetchCarpark_name } from '../../../API/Fetch_backend';
 
 export const Homepage = () => {
     const { User_email } = useParams();
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+    const [User, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+
+    function logout() {
+        console.log("Logging out");
+        // getAuth().signOut();
+    }
+
     useEffect(() => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log("User is authenticated: ", user.email); //changed
-                setUser(user.email);
+                async function fetch(){
+                    let user_data= await fetchCarpark_name(user.email);
+                    setUser(user_data);
+                }
+                fetch();
+                
             } else {
                 console.log("No user is authenticated, redirecting...");//changed
                 navigate('/');
@@ -29,23 +40,28 @@ export const Homepage = () => {
         return () => unsubscribe();
     }, [navigate]);
 
-    if (loading) {
+    if (loading == true || User == null) {
         return <div>Loading...</div>;
     }
-
-    return (
-        <div>
-            <Homepage_navbar />
-            <div className="flex bg-gray-300">
-                <div className="lg:w-72 sm:w-56 md:w-56 h-auto flex-grow-0">
-                    <Homepage_menu className="h-auto" />
-                </div>
-                <div className="my-2 w-screen overflow-y-scroll">
-                    <Parkview Usermail={user} />
+    else {
+        console.warn("USer:: ",User)
+        return (
+            <div>
+                <Homepage_navbar Cur_User={User} />
+                <div className="flex bg-gray-300">
+                    <div className="lg:w-72 sm:w-56 md:w-56 h-auto flex-grow-0">
+                        <Homepage_menu className="h-auto" />
+                    </div>
+                    <div className="my-2 w-screen overflow-y-scroll">
+                        <Parkview Usermail={User.email} UserLogout={logout()} />
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+
+    }
+
+
 
 
 }
