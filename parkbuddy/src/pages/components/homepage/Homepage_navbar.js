@@ -28,7 +28,7 @@ export const Homepage_navbar = (props) => {
         <div>
             <div className='  font-extrabold flex w-full h-16 py-4 text-gray-400 bg-gray-800'>
                 <div className="flex flex-1 pl-12 text-3xl text-yellow-500 justify-start">ParkBuddy</div>
-                <div>{Cur_User.car_park}</div>
+                <div className="text-3xl">{Cur_User.car_park}</div>
                 <div className="flex flex-1 positon-right justify-end items-center">
                     <div className="mr-3 px-4 w-full  flex justify-end">
                         <Dropdown className="px-3 w-max py-7 border-0 hover:bg-slate-800" overlay={menu} >

@@ -1,6 +1,6 @@
 import axios from "axios";
-import {database} from "..//API/firebase_auth";
-import { collection, getDocs ,doc,onSnapshot,getDoc,addDoc} from "firebase/firestore";
+import { database } from "..//API/firebase_auth";
+import { collection, getDocs, doc, onSnapshot, getDoc, addDoc,setDoc , updateDoc } from "firebase/firestore";
 
 
 // export async function fetchUser(User_email) {
@@ -61,7 +61,7 @@ export async function fetchUser(Usermail) {
             // Fetch UserLots collection
             const userLotsCollectionRef = collection(userDocRef, "UserLots");
             const userLotsSnapshot = await getDocs(userLotsCollectionRef);
-            
+
             // Add UserLots to the user object
             userLotsSnapshot.forEach(doc => {
                 userData.UserLots[doc.id] = doc.data();
@@ -72,7 +72,7 @@ export async function fetchUser(Usermail) {
                 const lotDocRef = doc(userLotsCollectionRef, lotName);
                 const lotEventsCollectionRef = collection(lotDocRef, "lot_events");
                 const lotEventsSnapshot = await getDocs(lotEventsCollectionRef);
-                
+
                 userData.UserLots[lotName].lot_events = lotEventsSnapshot.docs.map(doc => doc.data());
             }
 
@@ -87,28 +87,57 @@ export async function fetchUser(Usermail) {
     }
 }
 
-export async function fetchCarpark_name(Usermail){
+export async function addEventToHistory(eventData,Usermail) {
+    console.warn("Adding event to history22", eventData);
+
+    const docRef = doc(database,"Car_Parks", Usermail ,'History', eventData.date); // Reference to the document named after the relevant date
+    console.warn("Adding event to history66", docRef);
+
+    try {
+        // Check if the document already exists
+        const docSnap = await getDoc(docRef);
+        console.log("Adding data to history:::");
+        if (docSnap.exists()) {
+            // If the document exists, update it by adding a new event (using a unique event ID, like timestamp or vehicle number)
+            const newEventKey = `${eventData.vehicle_number}_${eventData.parklot_id}`; // A unique key based on vehicle number and current timestamp
+            await updateDoc(docRef, {
+                [newEventKey]: eventData, // Add the new event under a unique key
+            });
+        } else {
+            // If the document does not exist, create it with the new event
+            await setDoc(docRef, {
+                [`${eventData.vehicle_number}_${eventData.parklot_id}`]: eventData, // Use a unique key for the event
+            });
+        }
+
+        console.log('Event added successfully!');
+    } catch (error) {
+        console.error('Error adding event: ', error);
+    }
+};
+
+export async function fetchCarpark_name(Usermail) {
     try {
         const userDocRef = doc(collection(database, "Car_Parks"), Usermail);
         const userDoc = await getDoc(userDocRef);
 
-        let car_park=userDoc.data().Car_park_name;
-        let User_name= userDoc.data().User_name;
+        let car_park = userDoc.data().Car_park_name;
+        let User_name = userDoc.data().User_name;
 
-        let data={
-            'email':Usermail,
-            "car_park":car_park,
-            "user_name":User_name
+        let data = {
+            'email': Usermail,
+            "car_park": car_park,
+            "user_name": User_name
         }
-        console.warn("Retrieve data for menu: ",data);
+        console.warn("Retrieve data for menu: ", data);
         return data;
 
-        
+
     } catch (error) {
 
         console.error("Error fetching car park name");
-        
-        
+
+
     }
 
 }
@@ -168,7 +197,7 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
         console.error("Usermail is empty or undefined.");
         onUserDataChange(null);
         // Return a no-op cleanup function if Usermail is invalid
-        return () => {};
+        return () => { };
     }
 
     try {
@@ -220,7 +249,7 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
     } catch (error) {
         console.error("Error fetching data: ", error);
         // Return a no-op cleanup function if there is an error
-        return () => {};
+        return () => { };
     }
 }
 
@@ -284,10 +313,10 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
 
 
 
-export async function fetchParklot(lotid,User_id) {
+export async function fetchParklot(lotid, User_id) {
     console.log("Fetching parklot...");
     try {
-        const response = await axios.get('http://localhost:8000/Parklot/'+User_id + '/' + lotid);
+        const response = await axios.get('http://localhost:8000/Parklot/' + User_id + '/' + lotid);
 
         let park_lot = response.data;
         console.log("Response: ", park_lot);
@@ -313,17 +342,17 @@ export async function fetchParklot(lotid,User_id) {
 //     }
 // }
 
-export async function Check_events(User_id,event_data) {
+export async function Check_events(User_id, event_data) {
     try {
-        const response = await axios.post('http://localhost:8000/Check_events/'+User_id,event_data);
+        const response = await axios.post('http://localhost:8000/Check_events/' + User_id, event_data);
     }
     catch (error) {
         console.error("Error Sending data: ", error);
     }
 }
 
-export async function Add_newevent(Lot_id,User_id, event_data) {
-    
+export async function Add_newevent(Lot_id, User_id, event_data) {
+
     try {
         // Reference to the lot_events collection
         const lotEventsCollectionRef = collection(
@@ -336,7 +365,7 @@ export async function Add_newevent(Lot_id,User_id, event_data) {
 
         // Add event to the collection
         const response = await addDoc(lotEventsCollectionRef, event_data);
-        
+
         console.log("Event added with ID: ", response.id);
     } catch (error) {
         console.error("Error adding event: ", error);

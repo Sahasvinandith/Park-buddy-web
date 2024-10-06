@@ -1,4 +1,5 @@
-import { Add_newevent } from "../../../../../../API/Fetch_backend";
+import { Add_newevent,addEventToHistory } from "../../../../../../API/Fetch_backend";
+import {  } from "../../../../../../API/Fetch_backend";
 export function Compare_dates (Selcted_date_date){//this page was dedicated to store function that would need in calender methods
     
     
@@ -16,7 +17,8 @@ export function Compare_dates (Selcted_date_date){//this page was dedicated to s
 
 }
 
-export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_number){ 
+export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_number,Date){ 
+    console.log("Enable add event function");
 
     let newEvent = {
         "title":title,
@@ -25,6 +27,21 @@ export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_nu
         "Vehicle":Vehicle,
         "Vehicle_number":Vehicle_number
     }
+
+    let newhistory = {
+        "parklot_id":Parklot_id,
+        "vehicle_number":Vehicle_number,
+        "start":start,
+        "date":Date,
+        "end":end,
+        "client_name":title,
+        "client_email":"",
+        "vehicle_type":Vehicle,
+        "total amount":0
+    }
+    console.warn("Adding event to history11");
+
+    addEventToHistory(newhistory,User_id);
 
     Add_newevent(Parklot_id,User_id,newEvent);
 
