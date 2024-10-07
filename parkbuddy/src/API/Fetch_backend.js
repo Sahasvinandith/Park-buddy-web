@@ -91,7 +91,7 @@ export async function addEventToHistory(eventData,Usermail) {
     console.warn("Adding event to history22", eventData);
 
     const docRef = doc(database,"Car_Parks", Usermail ,'History', eventData.date); // Reference to the document named after the relevant date
-    console.warn("Adding event to history66", docRef);
+    console.warn("Adding event to history in fetch backend", docRef);
 
     try {
         // Check if the document already exists
@@ -115,6 +115,34 @@ export async function addEventToHistory(eventData,Usermail) {
         console.error('Error adding event: ', error);
     }
 };
+
+//retrieve event from history
+export async function getHistoryEvents(User_email) {
+    try {
+      // Get all documents in the "history" collection
+      const querySnapshot = await getDocs(collection(database, 'Car_Parks', User_email, 'History'));
+  
+      // Initialize an empty object to store the formatted result
+      const historyEvents = {};
+  
+      querySnapshot.forEach((doc) => {
+        // doc.id is the date (e.g., "2024-10-02")
+        const date = doc.id;
+        // doc.data() is an object containing events for that date
+        const events = doc.data();
+  
+        // Store the events under the date key
+        historyEvents[date] = events;
+      });
+  
+      console.log("Fetch backend:",historyEvents); // { '2024-10-02': { events }, ... }
+      return historyEvents;
+  
+    } catch (error) {
+      console.error('Error retrieving history events: ', error);
+    }
+  };
+  
 
 export async function fetchCarpark_name(Usermail) {
     try {
