@@ -22,7 +22,7 @@ app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
 
-app.get('/User/:UserID', async (req, res) => {
+app.get('/User/:UserID', async (req, res) => {//currently non-functional
     try {
         //first part of user objact
         Fetch_item = db.collection("Car_Parks").doc(req.params.UserID);
@@ -74,7 +74,7 @@ app.get('/User/:UserID', async (req, res) => {
 
 });
 
-app.get('/Parklot/:UserID/:lotid', (req, res) => {
+app.get('/Parklot/:UserID/:lotid', (req, res) => {//currently non-functional
     let Lot_id = req.params.lotid;
     let User_id = req.params.UserID;
     console.log("Asking for ", Lot_id);
@@ -91,7 +91,7 @@ app.get('/Parklot/:UserID/:lotid', (req, res) => {
 
 });
 
-app.post('/Add_event/:UserID/:lotid', async (req, res) => {
+app.post('/Add_event/:UserID/:lotid', async (req, res) => { //currently non-functional
     let Lot_id = req.params.lotid;
     let event_data = req.body;
     let now_user_name = req.params.UserID;
@@ -207,7 +207,7 @@ app.post('/', async (req, res) => {
 
 
 
-app.post('/Add_event/:UserID/:lotid', async (req, res) => {
+app.post('/Add_event/:UserID/:lotid', async (req, res) => { // currently non functional
     let Lot_id = req.params.lotid;
     let event_data = req.body;
     let now_user_name = req.params.UserID;
@@ -256,7 +256,7 @@ app.post('/Add_event/:UserID/:lotid', async (req, res) => {
 });
 
 
-app.post("/Add_User", async (req, res) => {
+app.post("/Add_User", async (req, res) => {//currently functional
     console.log("User data::: ", req.body);
     let User_email = req.body.User_email;
     let User_name = req.body.User_name;
