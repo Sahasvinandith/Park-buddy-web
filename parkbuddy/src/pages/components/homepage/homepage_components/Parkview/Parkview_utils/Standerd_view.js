@@ -71,7 +71,7 @@ export const Standard_view = ({ Usermail }) => {
     //         } finally {
     //             setLoading(false); // Set loading to false once fetch is complete
     //         }
-    //     }, 4000); // 2000 milliseconds = 2 seconds
+    //     }, 2000); // 2000 milliseconds = 2 seconds
 
     //     // Cleanup interval on component unmount
     //     return () => clearInterval(intervalId);

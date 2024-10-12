@@ -52,11 +52,11 @@ export const Homepage = () => {
                 <Homepage_navbar Cur_User={User} />
                 <div className="flex bg-gray-300">
                     <div className="lg:w-72 sm:w-56 md:w-56 h-auto flex-grow-0">
-                        <Homepage_menu tabto0={() => setTab(0)} tabto1={() => setTab(1)} className="h-auto" />
+                        <Homepage_menu tabto0={() => setTab(0)} tabto1={() => setTab(1)}  className="h-auto" />
                     </div>
-                    <div className="my-2 w-screen overflow-y-scroll">
+                    <div className="my-2 w-screen">
                         {
-                            tab == 0 ?<Parkview Usermail={User.email} UserLogout={logout()} /> : tab ==1 ? <History_page/>: <div></div>
+                            tab == 0 ?<Parkview Usermail={User.email} UserLogout={logout()} /> : tab ==1 ? <History_page User_email={User.email}/>: <div></div>
                         }
                         
                     </div>
