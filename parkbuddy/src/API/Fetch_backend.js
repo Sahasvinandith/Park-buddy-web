@@ -1,6 +1,6 @@
 import axios from "axios";
 import { database } from "..//API/firebase_auth";
-import { collection, getDocs, doc, onSnapshot, getDoc, addDoc,setDoc , updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, onSnapshot, getDoc, addDoc, setDoc, updateDoc } from "firebase/firestore";
 
 
 export async function fetchUser(Usermail) {
@@ -47,10 +47,10 @@ export async function fetchUser(Usermail) {
     }
 }
 
-export async function addEventToHistory(eventData,Usermail) {
+export async function addEventToHistory(eventData, Usermail) {
     console.warn("Adding event to history22", eventData);
 
-    const docRef = doc(database,"Car_Parks", Usermail ,'History', eventData.date); // Reference to the document named after the relevant date
+    const docRef = doc(database, "Car_Parks", Usermail, 'History', eventData.date); // Reference to the document named after the relevant date
     console.warn("Adding event to history in fetch backend", docRef);
 
     try {
@@ -79,30 +79,30 @@ export async function addEventToHistory(eventData,Usermail) {
 //retrieve event from history
 export async function getHistoryEvents(User_email) {
     try {
-      // Get all documents in the "history" collection
-      const querySnapshot = await getDocs(collection(database, 'Car_Parks', User_email, 'History'));
-  
-      // Initialize an empty object to store the formatted result
-      const historyEvents = {};
-  
-      querySnapshot.forEach((doc) => {
-        // doc.id is the date (e.g., "2024-10-02")
-        const date = doc.id;
-        // doc.data() is an object containing events for that date
-        const events = doc.data();
-  
-        // Store the events under the date key
-        historyEvents[date] = events;
-      });
-  
-      console.log("Fetch backend:",historyEvents); // { '2024-10-02': { events }, ... }
-      return historyEvents;
-  
+        // Get all documents in the "history" collection
+        const querySnapshot = await getDocs(collection(database, 'Car_Parks', User_email, 'History'));
+
+        // Initialize an empty object to store the formatted result
+        const historyEvents = {};
+
+        querySnapshot.forEach((doc) => {
+            // doc.id is the date (e.g., "2024-10-02")
+            const date = doc.id;
+            // doc.data() is an object containing events for that date
+            const events = doc.data();
+
+            // Store the events under the date key
+            historyEvents[date] = events;
+        });
+
+        console.log("Fetch backend:", historyEvents); // { '2024-10-02': { events }, ... }
+        return historyEvents;
+
     } catch (error) {
-      console.error('Error retrieving history events: ', error);
+        console.error('Error retrieving history events: ', error);
     }
-  };
-  
+};
+
 
 export async function fetchCarpark_name(Usermail) {
     try {
@@ -163,7 +163,13 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
                         const lotDocRef = doc(userLotsCollectionRef, lotName);
                         const lotEventsCollectionRef = collection(lotDocRef, "lot_events");
                         onSnapshot(lotEventsCollectionRef, (lotEventsSnapshot) => {
-                            userData.UserLots[lotName].lot_events = lotEventsSnapshot.docs.map((doc) => doc.data());
+                            userData.UserLots[lotName].lot_events = lotEventsSnapshot.docs.map((doc) => {
+                                return {
+                                    id: doc.id,
+                                    ...doc.data()
+                                }
+                            }
+                            );
                         });
                     }
 
@@ -176,7 +182,8 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
                     unsubscribeUserDoc(); // Unsubscribe from user doc
                     unsubscribeUserLots(); // Unsubscribe from UserLots
                 };
-            } else {
+            }
+            else {
                 console.log("User not found");
                 onUserDataChange(null); // Notify with null if user doesn't exist
             }
@@ -188,6 +195,30 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
         console.error("Error fetching data: ", error);
         // Return a no-op cleanup function if there is an error
         return () => { };
+    }
+}
+
+export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount }) {
+    try {
+        // Reference to the specific event document in Firestore
+        const eventDocRef = doc(
+            database,
+            `Car_Parks/${Usermail}/UserLots/${Lot_id}/lot_events`,
+            Event_id
+        );
+
+        // Update the amount field in the specified document
+        await updateDoc(eventDocRef, {
+            "Amount": Amount,
+            "Paid": 1,
+            "Real_end_time": new Date(),
+        }
+        );
+
+        console.log("Payment updated successfully!");
+    } catch (error) {
+        console.error("Error updating payment:", error);
+        throw error;
     }
 }
 

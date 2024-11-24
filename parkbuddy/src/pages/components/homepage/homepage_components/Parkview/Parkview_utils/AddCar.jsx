@@ -7,12 +7,14 @@ import { Add_event } from "./Calender_clicked_funcs";
 let username = "OnSite";
 let Vehicle_type = "Car";
 let Vehicle_number;
-let Arrival_time = new Date();
+
 let Expected_duration=3;
-let End_time=new Date(Arrival_time.getTime() + 3*60*60*1000);
+
 
 function Add_car_popup(props) {
     const { Close,Park_lot_id,User_id,reloadnow } = props;
+    let Arrival_time = new Date();
+    let End_time=new Date(Arrival_time.getTime() + 3*60*60*1000);
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md z-10 flex flex-col justify-center items-center">

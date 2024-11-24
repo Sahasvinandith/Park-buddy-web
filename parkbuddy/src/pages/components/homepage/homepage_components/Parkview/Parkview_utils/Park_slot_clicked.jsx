@@ -63,14 +63,18 @@ function Park_slot_info(props) {
                         <button className=' bg-green-700 font-bold text-yellow-300 px-3 py-2 mb-2 w-max h-max flex flex-row rounded-xl shadow-md gap-2 items-center hover:text-xl' onClick={() => { change_addcar_popup_event(true) }} >Add Park <CirclePlus size={"30px"} /></button>
                     </div>
 
-                    <div className='ml-20 text-2xl font-serif font-bold w-96 text-center flex-1'>{park_lot_id}</div>
+                    <div className='ml-20 text-2xl font-serif font-bold w-96 text-center flex-1 text-orange-400'>{park_lot_id}</div>
                     <div className='flex-1'></div>
 
                 </div>
 
                 <FullCalendar
+                
+                
+                    eventTextColor='white'
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     events={events}
+                    eventBackgroundColor='#3b82f6'
                     initialView={'timeGridWeek'}
                     headerToolbar={{
                         start: "today prev,next",
@@ -79,18 +83,21 @@ function Park_slot_info(props) {
                     }}
                     eventClick={function (info) {
                         info.jsEvent.preventDefault();
-                        console.log(info.event.toJSON());
+                        console.log("#@#@");
+                        
                         change_event_popup(true);
                         current_event = {
                             "Parking_lot": park_lot_id,
                             "Driver_name": info.event.title,
                             "Vehicle": info.event.toJSON().extendedProps.Vehicle,
                             "Start_time": info.event.start,
-
+                            "Paid":info.event.paid||0,
+                            "Id": info.event.id,
                             "End_time": info.event.end,
                             "Vehicle_number": info.event.toJSON().extendedProps.Vehicle_number,
 
                         }
+                        console.log(current_event);
 
                         set_pop_up_info(current_event);
 
@@ -103,9 +110,11 @@ function Park_slot_info(props) {
                     }}
                     selectable={true}
                     height={"90vh"}
+                    themeSystem='standard'
+
                 />
             </div>
-            {event_popup_show ? <Popup_event Close={() => change_event_popup(false)} Info={Popup_info} /> : ""}
+            {event_popup_show ? <Popup_event Close={() => change_event_popup(false)} Info={Popup_info} User_id={User_id} /> : ""}
             {Add_car_popup_show ? <Add_car_popup Close={() => {
                 change_addcar_popup_event(false);
 

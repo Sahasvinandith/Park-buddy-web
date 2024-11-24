@@ -1,11 +1,13 @@
 import { SquareX } from 'lucide-react';
 import React, { useState } from 'react';
+import { UpdatePayment } from '../../../../../../API/Fetch_backend';
 function Popup_event(props) {
-    const { Close, Info } = props;
+    const { Close, Info,User_id } = props;
     const [showbill, setshowbill] = useState(false);
     var strt = new Date(Info.Start_time);
     var endd = new Date(Info.End_time);
     var nowt = new Date();
+    
     var str_start_time = strt.toLocaleString();
     var str_end_time = endd.toLocaleString();
     var str_current_time = nowt.toLocaleString();
@@ -22,7 +24,18 @@ function Popup_event(props) {
         charge_method="300 perhour * "+durationHours+"hours + 200";
     }
 
-    // console.log("Info: ",Info.Start_time.toUTCString());
+    function paid({amount}){
+
+        //function of backend to update database about payment
+        
+        var res=UpdatePayment({Event_id:Info.Id,Lot_id:Info.Parking_lot,Usermail:User_id,Amount:amount});
+
+
+    }
+
+    function cancel() {
+
+    }
 
     if (showbill) {
         return (
@@ -39,7 +52,10 @@ function Popup_event(props) {
                     Duration: {duration_str}
                     <div className='w-full bg-black h-[calc(1px)]'></div>
                     Charge: Rs. {charge_method + " = " + charge}
-                    <div className='w-full h-full flex justify-center'><button className='m-5 bg-green-500 text-white font-semibold p-6 rounded-lg' onClick={() => setshowbill(!showbill)}>Send bill</button></div>
+                    <div className='w-full h-full flex justify-center'>
+                        <button className='m-5 w-32 bg-green-500 text-white font-semibold p-6 rounded-lg' onClick={() => paid({amount:charge})}>Paid</button>
+                        <button className='m-5 w-32 bg-red-500 text-white font-semibold p-6 rounded-lg' onClick={() => cancel(!showbill)}>Cancel</button>
+                    </div>
 
                 </div>
             </div>

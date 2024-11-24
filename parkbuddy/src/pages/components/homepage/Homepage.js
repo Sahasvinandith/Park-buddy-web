@@ -50,7 +50,7 @@ export const Homepage = () => {
         return (
             <div>
                 <Homepage_navbar Cur_User={User} />
-                <div className="flex bg-gray-300">
+                <div className="flex bg-gray-500">
                     <div className="lg:w-72 sm:w-56 md:w-56 h-auto flex-grow-0">
                         <Homepage_menu tabto0={() => setTab(0)} tabto1={() => setTab(1)}  className="h-auto" />
                     </div>
