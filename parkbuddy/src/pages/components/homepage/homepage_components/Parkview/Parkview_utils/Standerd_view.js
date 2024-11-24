@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Park_slot_info from "./Park_slot_clicked";
-import { fetchUser } from "../../../../../../API/Fetch_backend";
+import { ExtendTime, fetchUser } from "../../../../../../API/Fetch_backend";
 import { fetchUserRealTime } from "../../../../../../API/Fetch_backend";
 
 
@@ -113,7 +113,7 @@ export const Standard_view = ({ Usermail }) => {
 
                     if (Object.hasOwnProperty.call(element.lot_events, cur_event)) {
                         const now_event = element.lot_events[cur_event];
-
+                        console.warn("Updating end time",now_event);
                         let start = now_event.start;
                         let end = now_event.end;
                         const startTime = new Date(start);
@@ -122,14 +122,15 @@ export const Standard_view = ({ Usermail }) => {
 
                         if (currentTime >= startTime && currentTime <= endTime) {
                             park_lot_status = 'o'
+                            
                             break;
                         }
                         else if(currentTime > endTime){
                             park_lot_status = 'o';
-                            console.warn("Updating end time",element.lot_events[cur_event]);
 
 
                             //function to update end time
+                            ExtendTime({Event_id:now_event.id,Usermail:Usermail,Lot_id:element.name,Current_end_time:now_event.end});
                         }
 
 

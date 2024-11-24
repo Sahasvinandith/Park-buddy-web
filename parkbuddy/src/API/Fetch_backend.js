@@ -172,6 +172,33 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
     }
 }
 
+
+export async function ExtendTime({ Event_id, Lot_id, Usermail, Current_end_time }) {
+    try {
+        // Parse the current end time into a JavaScript Date object
+        const currentEndDate = new Date(Current_end_time);
+
+        // Add 30 minutes to the current end time
+        const extendedEndDate = new Date(currentEndDate.getTime() + 30 * 60 * 1000);
+
+        // Reference to the document in Firestore
+        const eventDocRef = doc(
+            database,
+            `Car_Parks/${Usermail}/UserLots/${Lot_id}/lot_events`,Event_id
+        );
+
+        // Update the end time in Firestore
+        await updateDoc(eventDocRef, {
+            "end": extendedEndDate.toISOString(),
+        });
+
+        console.log("Time extended successfully!");
+    } catch (error) {
+        console.error("Error extending time:", error);
+        throw new Error("Failed to extend time");
+    }
+}
+
 export async function UpdateEndTime({ Event_id, Lot_id, Usermail, History_date }) {//updating departure time and amount
 
 }
