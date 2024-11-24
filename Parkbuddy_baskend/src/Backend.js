@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./API/Firestore');
 const bodyParser = require('body-parser');
+const {GeoPoint} = require('@google-cloud/firestore');
 
 const app = express();
 app.use(express.json());
@@ -140,11 +141,11 @@ app.post('/', async (req, res) => {
 
             // Check for overlaps with existing events
             existingEventsSnapshot.forEach(doc => {
-                // console.log("Existing event: doc:", Lot_id, " ", doc.id, " - ");
+                
                 const existingEvent = doc.data();
                 const existingEventStart = new Date(existingEvent.start).toISOString();
                 const existingEventEnd = new Date(existingEvent.end).toISOString();
-                // console.log("Existing event: ", existingEventStart, " ", existingEventEnd);
+                
 
 
                 if (
@@ -262,12 +263,20 @@ app.post("/Add_User", async (req, res) => {//currently functional
     let User_name = req.body.User_name;
     let Car_park_name = req.body.Car_park_name;
     let num_of_lots = req.body.Num_car_park_slots;
+    let Park_location= req.body.Park_location;
+    const [latitude, longitude] = Park_location.split(',').map(Number);
 
+    if (isNaN(latitude) || isNaN(longitude)) {
+        return res.status(400).send({ error: "Invalid GPS location format." });
+    }
+    const geoPoint = new GeoPoint(latitude, longitude);
 
     let stroingobject = {
         "User_name": User_name,
         "Car_park_name": Car_park_name,
-        "num_of_lots": num_of_lots
+        "num_of_lots": num_of_lots,
+        "location":geoPoint
+
     }
 
 

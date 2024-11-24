@@ -91,8 +91,9 @@ function Park_slot_info(props) {
                             "Driver_name": info.event.title,
                             "Vehicle": info.event.toJSON().extendedProps.Vehicle,
                             "Start_time": info.event.start,
-                            "Paid":info.event.paid||0,
+                            "Paid":info.event.toJSON().extendedProps.Paid,
                             "Id": info.event.id,
+                            "Amount": info.event.toJSON().extendedProps.Amount,
                             "End_time": info.event.end,
                             "Vehicle_number": info.event.toJSON().extendedProps.Vehicle_number,
 

@@ -124,6 +124,13 @@ export const Standard_view = ({ Usermail }) => {
                             park_lot_status = 'o'
                             break;
                         }
+                        else if(currentTime > endTime){
+                            park_lot_status = 'o';
+                            console.warn("Updating end time",element.lot_events[cur_event]);
+
+
+                            //function to update end time
+                        }
 
 
 

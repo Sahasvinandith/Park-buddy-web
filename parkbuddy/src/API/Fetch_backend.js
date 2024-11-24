@@ -172,6 +172,10 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
     }
 }
 
+export async function UpdateEndTime({ Event_id, Lot_id, Usermail, History_date }) {//updating departure time and amount
+
+}
+
 export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount , History_date }) {//updating departure time and amount
     try {
         // Reference to the specific event document in Firestore
@@ -184,8 +188,8 @@ export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount , Histo
         // Update the amount field in the specified document
         await updateDoc(eventDocRef, {
             "Amount": Amount,
-            "Paid": 1,
-            "end": new Date(),
+            "Paid":1,
+            "end": new Date().toISOString(),
         }
         );
 
@@ -196,6 +200,7 @@ export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount , Histo
 
         // Update the amount field in the specified document
         await updateDoc(eventDocRef, {
+            [Event_id+".Paid"]: 1,
             [Event_id+".total_amount"]: Amount,
             [Event_id+".end"]: new Date().toISOString(),
             
@@ -264,13 +269,14 @@ export async function getHistoryEvents(User_email) {
 
 
 
-export async function Create_user(User_email, User_name, Car_park_name, Car_park_address, Num_car_park_slots) { //only function that rquires backend server
+export async function Create_user(User_email, User_name, Car_park_name, Car_park_address, Num_car_park_slots,Gpslocation) { //only function that rquires backend server
     let User_info = {
         User_email: User_email,
         User_name: User_name,
         Car_park_name: Car_park_name,
         Car_park_address: Car_park_address,
-        Num_car_park_slots: Num_car_park_slots
+        Num_car_park_slots: Num_car_park_slots,
+        Park_location:Gpslocation
     }
     try {
         const response = await axios.post('http://localhost:8000/Add_User', User_info);

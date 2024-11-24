@@ -41,7 +41,7 @@ export function HistoryCard(props) {
 
 
             <div className=" text-lg m-2 px-3 py-2 border-black border-2 rounded-lg w-calc[100%-10px] h-max">
-                <div className="text-xl font-bold">{eventdata.vehicle_number}</div><hr />
+                <div className="text-xl flex justify-between font-bold">{eventdata.vehicle_number}  <div>{eventdata.parklot_id}</div></div><hr />
                 <div className="flex flex-row">
                     <div style={{ display: "flex", flex: 3 }} className="flex-row">
                         <div style={{ display: "flex", flex: 1 }} className="flex-col">

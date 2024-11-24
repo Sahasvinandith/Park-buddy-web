@@ -121,6 +121,7 @@ const Signup_contents = () => {
                     <button 
                         className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' 
                         onClick={() => { 
+                            console.log("Location:", gpsLocation);
                             Create_user(User_email, User_name, Car_park_name, Car_park_address, Num_car_park_slots, gpsLocation); 
                             navigate('/login');
                         }}

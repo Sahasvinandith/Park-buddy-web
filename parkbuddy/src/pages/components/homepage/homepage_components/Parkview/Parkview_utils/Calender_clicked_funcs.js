@@ -37,7 +37,7 @@ export async function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehi
         "client_name":title,
         "client_email":"",
         "vehicle_type":Vehicle,
-        "total amount":0
+        "total_amount":0
     }
     
     var event_id=await Add_newevent(Parklot_id,User_id,newEvent);
