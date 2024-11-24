@@ -47,7 +47,7 @@ export async function fetchUser(Usermail) {
     }
 }
 
-export async function addEventToHistory(eventData, Usermail) {
+export async function addEventToHistory(eventData, Usermail,event_id) {
     console.warn("Adding event to history22", eventData);
 
     const docRef = doc(database, "Car_Parks", Usermail, 'History', eventData.date); // Reference to the document named after the relevant date
@@ -57,49 +57,23 @@ export async function addEventToHistory(eventData, Usermail) {
         // Check if the document already exists
         const docSnap = await getDoc(docRef);
         console.log("Adding data to history:::");
+        const newEventKey = `${event_id}`;
         if (docSnap.exists()) {
             // If the document exists, update it by adding a new event (using a unique event ID, like timestamp or vehicle number)
-            const newEventKey = `${eventData.vehicle_number}_${eventData.parklot_id}`; // A unique key based on vehicle number and current timestamp
+             // A unique key based on vehicle number and current timestamp
             await updateDoc(docRef, {
                 [newEventKey]: eventData, // Add the new event under a unique key
             });
         } else {
             // If the document does not exist, create it with the new event
             await setDoc(docRef, {
-                [`${eventData.vehicle_number}_${eventData.parklot_id}`]: eventData, // Use a unique key for the event
+                [newEventKey]: eventData, // Use a unique key for the event
             });
         }
 
         console.log('Event added successfully!');
     } catch (error) {
         console.error('Error adding event: ', error);
-    }
-};
-
-//retrieve event from history
-export async function getHistoryEvents(User_email) {
-    try {
-        // Get all documents in the "history" collection
-        const querySnapshot = await getDocs(collection(database, 'Car_Parks', User_email, 'History'));
-
-        // Initialize an empty object to store the formatted result
-        const historyEvents = {};
-
-        querySnapshot.forEach((doc) => {
-            // doc.id is the date (e.g., "2024-10-02")
-            const date = doc.id;
-            // doc.data() is an object containing events for that date
-            const events = doc.data();
-
-            // Store the events under the date key
-            historyEvents[date] = events;
-        });
-
-        console.log("Fetch backend:", historyEvents); // { '2024-10-02': { events }, ... }
-        return historyEvents;
-
-    } catch (error) {
-        console.error('Error retrieving history events: ', error);
     }
 };
 
@@ -198,10 +172,10 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
     }
 }
 
-export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount }) {
+export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount , History_date }) {//updating departure time and amount
     try {
         // Reference to the specific event document in Firestore
-        const eventDocRef = doc(
+        let eventDocRef = doc(
             database,
             `Car_Parks/${Usermail}/UserLots/${Lot_id}/lot_events`,
             Event_id
@@ -211,7 +185,20 @@ export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount }) {
         await updateDoc(eventDocRef, {
             "Amount": Amount,
             "Paid": 1,
-            "Real_end_time": new Date(),
+            "end": new Date(),
+        }
+        );
+
+        eventDocRef = doc(// updating the history
+            database,
+            `Car_Parks/${Usermail}/History/${History_date}`
+        );
+
+        // Update the amount field in the specified document
+        await updateDoc(eventDocRef, {
+            [Event_id+".total_amount"]: Amount,
+            [Event_id+".end"]: new Date().toISOString(),
+            
         }
         );
 
@@ -240,11 +227,41 @@ export async function Add_newevent(Lot_id, User_id, event_data) {
         const response = await addDoc(lotEventsCollectionRef, event_data);
 
         console.log("Event added with ID: ", response.id);
+        return response.id;
     } catch (error) {
         console.error("Error adding event: ", error);
         throw new Error("Error adding event");
     }
 }
+
+
+//retrieve event from history
+export async function getHistoryEvents(User_email) {
+    try {
+        // Get all documents in the "history" collection
+        const querySnapshot = await getDocs(collection(database, 'Car_Parks', User_email, 'History'));
+
+        // Initialize an empty object to store the formatted result
+        const historyEvents = {};
+
+        querySnapshot.forEach((doc) => {
+            // doc.id is the date (e.g., "2024-10-02")
+            const date = doc.id;
+            // doc.data() is an object containing events for that date
+            const events = doc.data();
+
+            // Store the events under the date key
+            historyEvents[date] = events;
+        });
+
+        console.log("Fetch backend:", historyEvents); // { '2024-10-02': { events }, ... }
+        return historyEvents;
+
+    } catch (error) {
+        console.error('Error retrieving history events: ', error);
+    }
+};
+
 
 
 export async function Create_user(User_email, User_name, Car_park_name, Car_park_address, Num_car_park_slots) { //only function that rquires backend server

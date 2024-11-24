@@ -82,13 +82,6 @@ export const Standard_view = ({ Usermail }) => {
 
 
 
-
-
-
-
-
-
-
     if (Cur_User == "Loading" || Cur_User == null) {
         return (
             //loading screen
@@ -108,23 +101,18 @@ export const Standard_view = ({ Usermail }) => {
 
 
         for (let key in User_User_lots) {//checking occupancy of parking lot
-            console.log("Checking: ", key);
-
+            
             let park_lot_status = 'f'
             if (Object.hasOwnProperty.call(Cur_User.UserLots, key)) {
 
                 const element = Cur_User.UserLots[key];
 
-                console.log("Checking element: ", element);
-
                 Total_lots += 1;
                 for (let cur_event in element.lot_events) {
-                    console.log("Checking event 1 : ", cur_event);
 
 
                     if (Object.hasOwnProperty.call(element.lot_events, cur_event)) {
                         const now_event = element.lot_events[cur_event];
-                        console.log("Checking event: ", now_event);
 
                         let start = now_event.start;
                         let end = now_event.end;
@@ -134,7 +122,6 @@ export const Standard_view = ({ Usermail }) => {
 
                         if (currentTime >= startTime && currentTime <= endTime) {
                             park_lot_status = 'o'
-                            console.log("Occupied found: ", element)
                             break;
                         }
 

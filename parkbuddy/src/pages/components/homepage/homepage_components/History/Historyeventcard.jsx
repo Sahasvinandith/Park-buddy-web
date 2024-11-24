@@ -14,7 +14,6 @@ export function HistoryCard(props) {
         });
     };
 
-    console.log("Date variable:", formatDate(eventdata.start));
 
     //format of eventdata = { vehicle_number, start, end, client_name, client_email, vehicle_type, total_amount }
     return (
@@ -56,7 +55,7 @@ export function HistoryCard(props) {
                         </div>
                     </div>
                     <div style={{ display: "flex", flex: 1 }} className=" flex-col">
-                        <div className="flex-1 text-xl font-bold">Balance: </div>
+                        <div className="flex-1 text-xl font-bold">Balance:Rs {eventdata.total_amount}</div>
                     </div>
                 </div>
             </div>

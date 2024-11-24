@@ -28,12 +28,13 @@ function Popup_event(props) {
 
         //function of backend to update database about payment
         
-        var res=UpdatePayment({Event_id:Info.Id,Lot_id:Info.Parking_lot,Usermail:User_id,Amount:amount});
-
-
+        var res=UpdatePayment({Event_id:Info.Id,Lot_id:Info.Parking_lot,Usermail:User_id,Amount:amount,History_date:Info.Start_time.toDateString()});
     }
 
     function cancel() {
+
+        //function that states parking is cancelled
+        console.log(Info.Start_time.toDateString());
 
     }
 
@@ -54,7 +55,7 @@ function Popup_event(props) {
                     Charge: Rs. {charge_method + " = " + charge}
                     <div className='w-full h-full flex justify-center'>
                         <button className='m-5 w-32 bg-green-500 text-white font-semibold p-6 rounded-lg' onClick={() => paid({amount:charge})}>Paid</button>
-                        <button className='m-5 w-32 bg-red-500 text-white font-semibold p-6 rounded-lg' onClick={() => cancel(!showbill)}>Cancel</button>
+                        <button className='m-5 w-32 bg-red-500 text-white font-semibold p-6 rounded-lg' onClick={() => cancel()}>Cancel</button>
                     </div>
 
                 </div>

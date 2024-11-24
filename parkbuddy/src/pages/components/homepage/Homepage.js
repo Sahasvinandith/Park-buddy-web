@@ -15,11 +15,6 @@ export const Homepage = () => {
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState(0);
 
-    function logout() {
-        console.log("Logging out");
-        // getAuth().signOut();
-    }
-
     useEffect(() => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -56,7 +51,7 @@ export const Homepage = () => {
                     </div>
                     <div className="my-2 w-screen">
                         {
-                            tab == 0 ?<Parkview Usermail={User.email} UserLogout={logout()} /> : tab ==1 ? <History_page User_email={User.email}/>: <div></div>
+                            tab == 0 ?<Parkview Usermail={User.email} /> : tab ==1 ? <History_page User_email={User.email}/>: <div></div>
                         }
                         
                     </div>

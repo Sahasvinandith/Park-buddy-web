@@ -17,7 +17,7 @@ export function Compare_dates (Selcted_date_date){//this page was dedicated to s
 
 }
 
-export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_number,Date){ 
+export async function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_number,Date){ 
     console.log("Enable add event function");
 
     let newEvent = {
@@ -39,11 +39,17 @@ export function Add_event (Parklot_id,User_id,title,start,end,Vehicle,Vehicle_nu
         "vehicle_type":Vehicle,
         "total amount":0
     }
-    console.warn("Adding event to history11");
+    
+    var event_id=await Add_newevent(Parklot_id,User_id,newEvent);
 
-    addEventToHistory(newhistory,User_id);
+    if(event_id!=null || event_id!= Promise){
+        console.warn("Adding event to history11",event_id);
+        addEventToHistory(newhistory,User_id,event_id);
 
-    Add_newevent(Parklot_id,User_id,newEvent);
+    }
+    
+
+    
 
 
 

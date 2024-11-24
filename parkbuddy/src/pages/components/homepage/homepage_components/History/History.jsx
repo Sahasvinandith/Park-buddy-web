@@ -100,7 +100,9 @@ export const History_page = ({ User_email }) => {
             </div>
         );
     } else {
+        console.log("history:", history);
         return (
+            
             <div
                 style={{ height: "calc(100vh - 80px)" }}
                 className="w-full bg-slate-100 text-black font-semibold overflow-y-scroll"
