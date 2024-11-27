@@ -23,6 +23,11 @@ app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
 
+app.get('/test', (req, res) => {
+    console.log("Test");
+    res.send("Test");
+})
+
 app.get('/User/:UserID', async (req, res) => {//currently non-functional
     try {
         //first part of user objact
@@ -113,7 +118,114 @@ app.post('/Add_event/:UserID/:lotid', async (req, res) => { //currently non-func
 
 
 //for mobile
-app.post('/', async (req, res) => {
+// app.post('/AddEvent', async (req, res) => {
+//     let event_data = req.body;
+//     let now_user_name = event_data.Car_park;
+//     console.log("ADD event to Car park ", now_user_name, " with data ", event_data);
+
+//     try {
+//         const carParkRef = db.collection("Car_Parks").doc(now_user_name).collection("UserLots");
+//         const allLotsSnapshot = await carParkRef.get();
+
+//         const newEventStart = new Date(event_data.start).toISOString();
+//         const newEventEnd = new Date(event_data.end).toISOString();
+
+//         let availableSlots = [];
+//         let notavailable = [];
+//         let Total_Lots = 0;
+
+
+//         // Iterate through all parking lots in the car park
+//         for (let lotDoc of allLotsSnapshot.docs) {
+//             Total_Lots++;
+//             let Lot_id = lotDoc.id;
+//             const eventsRef = carParkRef.doc(Lot_id).collection("lot_events");
+//             const existingEventsSnapshot = await eventsRef.get();
+
+//             let isOverlap = false;
+
+//             // Check for overlaps with existing events
+//             existingEventsSnapshot.forEach(doc => {
+
+//                 const existingEvent = doc.data();
+//                 const existingEventStart = new Date(existingEvent.start).toISOString();
+//                 const existingEventEnd = new Date(existingEvent.end).toISOString();
+
+
+
+//                 if (
+//                     (newEventStart < existingEventEnd && newEventEnd > existingEventStart) ||
+//                     (newEventStart >= existingEventStart && newEventStart < existingEventEnd)
+//                 ) {
+//                     isOverlap = true;
+//                 }
+//             });
+
+//             // If no overlap, add this parking lot to the available slots array
+//             if (!isOverlap) {
+//                 availableSlots.push(Lot_id);
+//             }
+//             else {
+//                 notavailable.push(Lot_id);
+//             }
+//         }
+
+//         if (availableSlots.length === 0) {
+//             return res.status(400).json({ error: "No available parking slots for the new event." });
+//         }
+//         else {
+//             console.log("Available slots: ", availableSlots);
+//             console.log("Not available slots: ", notavailable);
+
+//         }
+
+//         // // If there are available slots, you can proceed to add the event to one of them
+//         // // Example: Add the event to the first available slot
+
+//         try {
+//             const response1 = await carParkRef.doc(availableSlots[0]).collection("lot_events").add(event_data);
+//             console.log("Added event to: ", availableSlots[0]);
+//             return res.status(200).json({
+//                 success: "Event added successfully.",
+//                 availableSlots: availableSlots
+//             });
+
+//         } catch (error) {
+
+//             console.log("Error adding event");
+//             return res.status(500).json({
+//                 Fail: "Event not added",
+//                 availableSlots: availableSlots
+//             });
+
+
+//         }
+
+//     } catch (error) {
+//         console.error("Error adding event:", error);
+//         return res.status(500).json({ error: "An error occurred while adding the event." });
+//     }
+// });
+async function addEventToHistory(eventData, userMail, eventId) {
+    console.warn("Adding event to history", eventData);
+
+    // Reference to the document named after the relevant date
+    const docRef = db.collection("Car_Parks").doc(userMail).collection("History").doc(eventData.date);
+    console.warn("Adding event to history at", docRef);
+
+
+    try {
+        await docRef.update({
+            [eventData]: eventData // Dynamically create the key with its value
+        });
+
+        console.log("Event added to history successfully!");
+    } catch (error) {
+        console.error("Error adding event to history:", error);
+    }
+}
+
+app.post('/AddEvent', async (req, res) => {
     let event_data = req.body;
     let now_user_name = event_data.Car_park;
     console.log("ADD event to Car park ", now_user_name, " with data ", event_data);
@@ -126,27 +238,22 @@ app.post('/', async (req, res) => {
         const newEventEnd = new Date(event_data.end).toISOString();
 
         let availableSlots = [];
-        let notavailable = [];
-        let Total_Lots = 0;
-
+        let remainingTimes = []; // To store remaining times for each available lot
 
         // Iterate through all parking lots in the car park
         for (let lotDoc of allLotsSnapshot.docs) {
-            Total_Lots++;
             let Lot_id = lotDoc.id;
             const eventsRef = carParkRef.doc(Lot_id).collection("lot_events");
             const existingEventsSnapshot = await eventsRef.get();
 
             let isOverlap = false;
+            let occupiedTime = 0;
 
             // Check for overlaps with existing events
             existingEventsSnapshot.forEach(doc => {
-                
                 const existingEvent = doc.data();
                 const existingEventStart = new Date(existingEvent.start).toISOString();
                 const existingEventEnd = new Date(existingEvent.end).toISOString();
-                
-
 
                 if (
                     (newEventStart < existingEventEnd && newEventEnd > existingEventStart) ||
@@ -154,58 +261,66 @@ app.post('/', async (req, res) => {
                 ) {
                     isOverlap = true;
                 }
+
+                // Calculate total occupied time
+                occupiedTime += (new Date(existingEventEnd) - new Date(existingEventStart)) / (1000 * 60 * 60); // Convert ms to hours
             });
 
-            // If no overlap, add this parking lot to the available slots array
+            // If no overlap, calculate remaining time
             if (!isOverlap) {
+                const totalParkingTime = 24; // Assuming 24 hours as total available time for simplicity
+                const newEventDuration = (new Date(newEventEnd) - new Date(newEventStart)) / (1000 * 60 * 60); // Convert ms to hours
+                const remainingTime = totalParkingTime - (occupiedTime + newEventDuration);
+
                 availableSlots.push(Lot_id);
-            }
-            else {
-                notavailable.push(Lot_id);
+                remainingTimes.push({ Lot_id, remainingTime });
             }
         }
 
         if (availableSlots.length === 0) {
             return res.status(400).json({ error: "No available parking slots for the new event." });
         }
-        else {
-            console.log("Available slots: ", availableSlots);
-            console.log("Not available slots: ", notavailable);
 
-        }
+        // Sort available slots by the remaining time in descending order
+        remainingTimes.sort((a,b) => b.remainingTime - a.remainingTime);
 
-        // // If there are available slots, you can proceed to add the event to one of them
-        // // Example: Add the event to the first available slot
+        // Select the lot with the most remaining time
+        const selectedLot = remainingTimes[0].Lot_id;
 
+        // Add the event to the selected lot
         try {
-            const response1 = await carParkRef.doc(availableSlots[0]).collection("lot_events").add(event_data);
-            console.log("Added event to: ", availableSlots[0]);
-            return res.status(200).json({
-                success: "Event added successfully.",
-                availableSlots: availableSlots
-            });
+            const response1 = await carParkRef.doc(selectedLot).collection("lot_events").add(event_data);
+            console.log("Added event with ID ", response1.id," / ",selectedLot);
+            var date = new Date(event_data.start).toDateString();
+            console.log("date: ",date);
+            let newhistory = {
+                "parklot_id":selectedLot,
+                "vehicle_number":event_data.Vehicle_number,
+                "start":event_data.start,
+                "date":date,
+                "end":event_data.end,
+                "client_name":event_data.title,
+                "client_email":event_data.title,
+                "vehicle_type":event_data.Vehicle,
+                "total_amount":0
+            }
 
+            // addEventToHistory(newhistory,event_data.Car_park,response1.id);
+            // addEventToHistory(newhistory,event_data.Car_park,"iddd");
+
+            res.send({
+                success: "Event added successfully. History added succussfully",})
+
+            
         } catch (error) {
-
-            console.log("Error adding event");
-            return res.status(500).json({
-                Fail: "Event not added",
-                availableSlots: availableSlots
-            });
-
-
+            console.log("Error adding event:", error);
+            return res.status(500).json({ error: "Event not added" });
         }
-
-
-
-
-
     } catch (error) {
         console.error("Error adding event:", error);
         return res.status(500).json({ error: "An error occurred while adding the event." });
     }
 });
-
 
 
 app.post('/Add_event/:UserID/:lotid', async (req, res) => { // currently non functional
@@ -263,7 +378,7 @@ app.post("/Add_User", async (req, res) => {//currently functional
     let User_name = req.body.User_name;
     let Car_park_name = req.body.Car_park_name;
     let num_of_lots = req.body.Num_car_park_slots;
-    let Park_location= req.body.Park_location;
+    let Park_location = req.body.Park_location;
     const [latitude, longitude] = Park_location.split(',').map(Number);
 
     if (isNaN(latitude) || isNaN(longitude)) {
@@ -275,7 +390,7 @@ app.post("/Add_User", async (req, res) => {//currently functional
         "User_name": User_name,
         "Car_park_name": Car_park_name,
         "num_of_lots": num_of_lots,
-        "location":geoPoint
+        "location": geoPoint
 
     }
 

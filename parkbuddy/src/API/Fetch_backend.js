@@ -33,7 +33,7 @@ export async function fetchUser(Usermail) {
                 const lotEventsCollectionRef = collection(lotDocRef, "lot_events");
                 const lotEventsSnapshot = await getDocs(lotEventsCollectionRef);
 
-                userData.UserLots[lotName].lot_events = lotEventsSnapshot.docs.map(doc => doc.data());
+                userData.UserLots[lotName].lot_events = lotEventsSnapshot.docs.map(doc => ({"Id":doc.id,...doc.data()}));
             }
 
             return userData;
@@ -174,6 +174,7 @@ export function fetchUserRealTime(Usermail, onUserDataChange) {
 
 
 export async function ExtendTime({ Event_id, Lot_id, Usermail, Current_end_time }) {
+    console.log("Extending time for event: ", Event_id," / ",Lot_id);
     try {
         // Parse the current end time into a JavaScript Date object
         const currentEndDate = new Date(Current_end_time);
@@ -189,27 +190,27 @@ export async function ExtendTime({ Event_id, Lot_id, Usermail, Current_end_time 
 
         // Update the end time in Firestore
         await updateDoc(eventDocRef, {
+
             "end": extendedEndDate.toISOString(),
+
         });
 
         console.log("Time extended successfully!");
     } catch (error) {
-        console.error("Error extending time:", error);
-        throw new Error("Failed to extend time");
+        console.error("Error extending time:", error.toString());
+        alert("Error extending time");
     }
 }
 
-export async function UpdateEndTime({ Event_id, Lot_id, Usermail, History_date }) {//updating departure time and amount
-
-}
 
 export async function UpdatePayment({ Event_id, Lot_id, Usermail, Amount , History_date }) {//updating departure time and amount
     try {
+        console.log("Updating payment for event: ", Event_id," / ",Lot_id);
         // Reference to the specific event document in Firestore
         let eventDocRef = doc(
             database,
-            `Car_Parks/${Usermail}/UserLots/${Lot_id}/lot_events`,
-            Event_id
+            `Car_Parks/${Usermail}/UserLots/${Lot_id}/lot_events/${Event_id}`,
+            
         );
 
         // Update the amount field in the specified document

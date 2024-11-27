@@ -21,6 +21,7 @@ function Popup_event(props) {
     var strt = new Date(Info.Start_time);
     var endd = new Date(Info.End_time);
     var nowt = new Date();
+    console.log("event: ", Info);
 
     var str_start_time = strt.toLocaleString();
     var str_end_time = endd.toLocaleString();
@@ -40,15 +41,18 @@ function Popup_event(props) {
 
     function paid({ amount }) {
 
+        console.log("Paid: ",Info.Id);
         //function of backend to update database about payment
 
         var res = UpdatePayment({ Event_id: Info.Id, Lot_id: Info.Parking_lot, Usermail: User_id, Amount: amount, History_date: Info.Start_time.toDateString() });
+        Close();
     }
 
     function cancel() {
 
         //function that states parking is cancelled
         console.log(Info.Start_time.toDateString());
+        Close();
 
     }
 

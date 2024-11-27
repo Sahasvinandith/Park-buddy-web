@@ -20,14 +20,15 @@ export const Standard_view = ({ Usermail }) => {
     const divElements = [];
     let assign_user;
 
-    // useEffect(() => {
-    //     async function main (){
-    //         assign_user =await fetchUser(Usermail);
-    //         set_user(assign_user);
+    useEffect(() => {
+        async function main (){
+            assign_user =await fetchUser(Usermail);
+            set_user(assign_user);
 
-    //     }
-    //     main();
-    // },[])
+        }
+        main();
+    },[])
+
     // Initialize with null or appropriate initial value
     const [loading, setLoading] = useState(true); // Add a loading state
 
@@ -48,35 +49,64 @@ export const Standard_view = ({ Usermail }) => {
     //     fetchData();
     // }, [Park_view]); // Add Usermail to dependency array to refetch if Usermail changes
 
-    useEffect(() => {
-        const unsubscribe = fetchUserRealTime(Usermail, (userData) => {
-            console.warn("New updation interface");
-            set_user(userData); // Update state with the new user data
-        });
+    // useEffect(() => {
+    //     const unsubscribe = fetchUserRealTime(Usermail, (userData) => {
+    //         console.warn("New updation interface");
+    //         set_user(userData); // Update state with the new user data
+    //     });
 
-        // Cleanup listener on component unmount
-        return () => unsubscribe();
-    }, []);
+    //     // Cleanup listener on component unmount
+    //     return () => unsubscribe();
+    // }, []);
+
+    useEffect(() => {
+        const intervalId = setInterval(async () => {
+            try {
+                console.warn("fetching new info:");
+                const user = await fetchUser(Usermail); // Fetch user without considering any variable
+
+                set_user(user);
+            } catch (error) {
+                console.error("Error fetching user:", error);
+                set_user(null); // Handle errors
+            } finally {
+                setLoading(false); // Set loading to false once fetch is complete
+            }
+        }, 3000); // 2000 milliseconds = 2 seconds
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []); // Empty dependency array to set up the interval once
 
     // useEffect(() => {
-    //     const intervalId = setInterval(async () => {
-    //         try {
-    //             console.warn("fetching new info:");
-    //             const user = await fetchUser(Usermail); // Fetch user without considering any variable
+    //     let isFetching = false; // To track if a fetch is already in progress
 
+    //     const fetchUserData = async () => {
+    //         if (isFetching) return; // Prevent overlapping requests
+    //         isFetching = true;
+
+    //         try {
+    //             console.warn("Fetching new info...");
+    //             const user = await fetchUser(Usermail); // Wait for the response before proceeding
     //             set_user(user);
     //         } catch (error) {
     //             console.error("Error fetching user:", error);
-    //             set_user(null); // Handle errors
+    //             set_user(null);
     //         } finally {
-    //             setLoading(false); // Set loading to false once fetch is complete
+    //             isFetching = false; // Mark fetch as complete
+    //             setLoading(false);
+    //             setTimeout(fetchUserData, 5000); // Schedule the next fetch after the current one completes
     //         }
-    //     }, 2000); // 2000 milliseconds = 2 seconds
+    //     };
 
-    //     // Cleanup interval on component unmount
-    //     return () => clearInterval(intervalId);
-    // }, []); // Empty dependency array to set up the interval once
+    //     // Start the first fetch
+    //     fetchUserData();
 
+    //     // Cleanup function to prevent memory leaks
+    //     return () => {
+    //         isFetching = false; // Ensure no further calls are made after unmount
+    //     };
+    // }, [Usermail]); // Add dependencies if necessary
 
 
 
@@ -90,18 +120,12 @@ export const Standard_view = ({ Usermail }) => {
     }
 
     else {
-        console.warn("Cur_user++: ", Cur_User);
-
-
+        console.log("Current user: ", Cur_User);
 
         let User_User_lots = Cur_User.UserLots;
 
-
-
-
-
         for (let key in User_User_lots) {//checking occupancy of parking lot
-            
+
             let park_lot_status = 'f'
             if (Object.hasOwnProperty.call(Cur_User.UserLots, key)) {
 
@@ -113,7 +137,7 @@ export const Standard_view = ({ Usermail }) => {
 
                     if (Object.hasOwnProperty.call(element.lot_events, cur_event)) {
                         const now_event = element.lot_events[cur_event];
-                        console.warn("Updating end time",now_event);
+
                         let start = now_event.start;
                         let end = now_event.end;
                         const startTime = new Date(start);
@@ -122,15 +146,18 @@ export const Standard_view = ({ Usermail }) => {
 
                         if (currentTime >= startTime && currentTime <= endTime) {
                             park_lot_status = 'o'
-                            
+
                             break;
                         }
-                        else if(currentTime > endTime){
+                        else if (currentTime > endTime && now_event.Paid != 1) {
                             park_lot_status = 'o';
+                            console.log("Event id!: ", now_event.Id);
 
-
-                            //function to update end time
-                            ExtendTime({Event_id:now_event.id,Usermail:Usermail,Lot_id:element.name,Current_end_time:now_event.end});
+                            if (now_event.Id != null) {
+                                //function to update end time
+                                ExtendTime({ Event_id: now_event.Id, Usermail: Usermail, Lot_id: element.name, Current_end_time: now_event.end });
+                                break;
+                            }
                         }
 
 

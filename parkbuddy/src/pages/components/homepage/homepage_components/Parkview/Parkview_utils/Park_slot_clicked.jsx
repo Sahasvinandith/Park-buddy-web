@@ -29,6 +29,7 @@ function Park_slot_info(props) {
     var reloader = false;
 
     useEffect(() => {
+        console.log("events++: ", user.UserLots[park_lot_id].lot_events);
         setevents(user.UserLots[park_lot_id].lot_events)
     }, [user])
 
@@ -83,7 +84,7 @@ function Park_slot_info(props) {
                     }}
                     eventClick={function (info) {
                         info.jsEvent.preventDefault();
-                        console.log("#@#@");
+                        console.log("#@#@",current_event);
                         
                         change_event_popup(true);
                         current_event = {
@@ -92,7 +93,7 @@ function Park_slot_info(props) {
                             "Vehicle": info.event.toJSON().extendedProps.Vehicle,
                             "Start_time": info.event.start,
                             "Paid":info.event.toJSON().extendedProps.Paid,
-                            "Id": info.event.id,
+                            "Id": info.event.extendedProps.Id,
                             "Amount": info.event.toJSON().extendedProps.Amount,
                             "End_time": info.event.end,
                             "Vehicle_number": info.event.toJSON().extendedProps.Vehicle_number,
